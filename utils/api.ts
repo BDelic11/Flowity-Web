@@ -2,7 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  timeout: 5000,
+  timeout: 15000,
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
@@ -32,6 +32,7 @@ const AUTH_SKIP_401 = [
   "/auth/refresh",
   "/auth/register",
   "/auth/logout",
+  "/auth/google",
 ];
 
 // Pages where we should NOT force-redirect on refresh failure

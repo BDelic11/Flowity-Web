@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useLogin, getApiErrorMessage } from "@/app/api/hooks/auth/useLogin";
+import { useLogin } from "@/app/api/hooks/auth/useLogin";
+import { parseApiError } from "@/lib/api-errors";
 import { useGoogleAuth } from "@/app/api/hooks/auth/useGoogleAuth";
 import { GoogleLoginButton } from "@/components/auth/google-login-button";
 import { loginSchema, type LoginValues } from "@/schemas/login";
@@ -31,6 +32,7 @@ export default function LoginPage() {
     password: "",
   });
   const [showPw, setShowPw] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof LoginValues, string>>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const { mutateAsync: loginUser } = useLogin();
@@ -41,14 +43,11 @@ export default function LoginPage() {
     justLoggedIn.current = true;
     try {
       const result = await googleLogin(accessToken);
-      if (result.is_new_user) {
-        router.push("/create-organization");
-      } else {
-        router.push(routes.dashboard);
-      }
-    } catch {
+      router.push(result.is_new_user ? routes.plans : routes.dashboard);
+    } catch (err) {
       justLoggedIn.current = false;
-      setFormError(t("auth.googleFailed"));
+      const parsed = parseApiError(err, t("auth.googleFailed"));
+      setFormError(parsed.message);
     }
   }
   const { t } = useLocale();
@@ -64,6 +63,7 @@ export default function LoginPage() {
 
   function onChange<K extends keyof LoginValues>(key: K, v: LoginValues[K]) {
     setFormError(null);
+    setFieldErrors((s) => ({ ...s, [key]: undefined }));
     setValues((s) => ({ ...s, [key]: v }));
   }
 
@@ -73,18 +73,23 @@ export default function LoginPage() {
 
     const parsed = loginSchema.safeParse(values);
     if (!parsed.success) {
-      setFormError(parsed.error.issues[0]?.message ?? t("auth.invalidInput"));
+      const errs: Partial<Record<keyof LoginValues, string>> = {};
+      for (const i of parsed.error.issues) {
+        const k = i.path[0] as keyof LoginValues | undefined;
+        if (k && !errs[k]) errs[k] = i.message;
+      }
+      setFieldErrors(errs);
       return;
     }
 
     setIsPending(true);
     try {
-      await loginUser({ email: values.email, password: values.password });
+      await loginUser(parsed.data);
       router.push(routes.dashboard);
     } catch (error) {
-      setFormError(
-        getApiErrorMessage(error, t("auth.loginFailed"))
-      );
+      const parsedErr = parseApiError(error, t("auth.loginFailed"));
+      setFieldErrors((s) => ({ ...s, ...parsedErr.fieldErrors }));
+      setFormError(parsedErr.message);
     } finally {
       setIsPending(false);
     }
@@ -109,8 +114,10 @@ export default function LoginPage() {
                 onChange={(e) => onChange("email", e.target.value)}
                 autoComplete="email"
                 inputMode="email"
+                aria-invalid={!!fieldErrors.email}
                 required
               />
+              {fieldErrors.email && <p className="text-xs text-destructive">{t(fieldErrors.email)}</p>}
             </div>
 
             <div className="grid gap-2">
@@ -122,6 +129,7 @@ export default function LoginPage() {
                   value={values.password}
                   onChange={(e) => onChange("password", e.target.value)}
                   autoComplete="current-password"
+                  aria-invalid={!!fieldErrors.password}
                   required
                   className="pr-10"
                 />
@@ -139,6 +147,9 @@ export default function LoginPage() {
                   )}
                 </button>
               </div>
+              {fieldErrors.password && (
+                <p className="text-xs text-destructive">{t(fieldErrors.password)}</p>
+              )}
             </div>
 
             {formError && (

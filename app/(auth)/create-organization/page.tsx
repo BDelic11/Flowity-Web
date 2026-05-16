@@ -5,65 +5,69 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import * as z from "zod";
 import { useCreateOrganization } from "@/app/api/hooks/organizations/useCreateOrganization";
 import { routes } from "@/constants/routes";
 import { useQueryClient } from "@tanstack/react-query";
-import { getApiErrorMessage } from "@/app/api/hooks/auth/useLogin";
+import {
+  createOrganizationSchema,
+  type CreateOrganizationInput,
+} from "@/schemas/organization";
+import { parseApiError } from "@/lib/api-errors";
 import { useLocale } from "@/contexts/locale-context";
-
-const createOrganizationSchema = z.object({
-  name: z.string().min(1, "Organization name is required"),
-  industry: z.string().min(1, "Industry is required"),
-  email: z.string().email("Invalid email").min(1, "Email is required"),
-  phone: z.string().optional(),
-  address: z.string().optional(),
-});
-
-export type CreateOrganizationData = z.infer<typeof createOrganizationSchema>;
 
 export default function CreateOrganizationPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [organizationData, setOrganizationData] =
-    useState<CreateOrganizationData>({
-      name: "",
-      industry: "",
-      email: "",
-      phone: "",
-      address: "",
-    });
+  const [values, setValues] = useState<CreateOrganizationInput>({
+    name: "",
+    industry: "",
+    email: "",
+    phone: "",
+    address: "",
+    timeZone:
+      typeof window !== "undefined"
+        ? Intl.DateTimeFormat().resolvedOptions().timeZone
+        : "Europe/Zagreb",
+  });
+  const [errors, setErrors] = useState<Partial<Record<keyof CreateOrganizationInput, string>>>({});
   const [isPending, setIsPending] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setOrganizationData((prev) => ({ ...prev, [name]: value }));
-  };
+  function onChange<K extends keyof CreateOrganizationInput>(
+    key: K,
+    v: CreateOrganizationInput[K]
+  ) {
+    setErrors((s) => ({ ...s, [key]: undefined }));
+    setValues((s) => ({ ...s, [key]: v }));
+  }
 
   const { mutateAsync: createOrganization } = useCreateOrganization();
   const { t } = useLocale();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (isPending) return;
 
-    try {
-      createOrganizationSchema.parse(organizationData);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        toast.error(error.errors.map((e) => e.message).join(", "));
+    const parsed = createOrganizationSchema.safeParse(values);
+    if (!parsed.success) {
+      const errs: Partial<Record<keyof CreateOrganizationInput, string>> = {};
+      for (const i of parsed.error.issues) {
+        const k = i.path[0] as keyof CreateOrganizationInput | undefined;
+        if (k && !errs[k]) errs[k] = i.message;
       }
+      setErrors(errs);
       return;
     }
 
     setIsPending(true);
     try {
-      await createOrganization(organizationData);
-      // Refetch user so organizationId is populated before navigating to dashboard
+      await createOrganization(parsed.data);
       await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
       toast.success(t("organization.created"));
       router.push(routes.dashboard);
     } catch (error) {
-      toast.error(getApiErrorMessage(error, t("organization.failed")));
+      const err = parseApiError(error, t("organization.failed"));
+      setErrors((s) => ({ ...s, ...err.fieldErrors }));
+      toast.error(err.message);
     } finally {
       setIsPending(false);
     }
@@ -71,57 +75,75 @@ export default function CreateOrganizationPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-md space-y-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
         <h3 className="text-lg font-semibold">{t("organization.create")}</h3>
         <p className="text-sm text-gray-600">{t("organization.createDesc")}</p>
 
-        <Input
-          name="name"
-          value={organizationData.name}
-          onChange={handleInputChange}
-          placeholder={t("organization.name")}
-          required
-        />
-        <Input
-          name="industry"
-          value={organizationData.industry}
-          onChange={handleInputChange}
-          placeholder={t("organization.industry")}
-          required
-        />
-        <Input
-          name="email"
-          value={organizationData.email}
-          onChange={handleInputChange}
-          placeholder={t("common.email")}
-          required
-        />
-        <Input
-          name="phone"
-          value={organizationData.phone}
-          onChange={handleInputChange}
-          placeholder={t("organization.phone")}
-        />
-        <Input
-          name="address"
-          value={organizationData.address}
-          onChange={handleInputChange}
-          placeholder={t("organization.address")}
-        />
+        <div>
+          <Input
+            name="name"
+            value={values.name}
+            onChange={(e) => onChange("name", e.target.value)}
+            placeholder={t("organization.name")}
+            aria-invalid={!!errors.name}
+            required
+          />
+          {errors.name && <p className="text-xs text-destructive mt-1">{t(errors.name!)}</p>}
+        </div>
 
-        <Button
-          className="mt-4 w-full"
-          onClick={handleSubmit}
-          disabled={
-            isPending ||
-            !organizationData.name ||
-            !organizationData.industry ||
-            !organizationData.email
-          }
-        >
+        <div>
+          <Input
+            name="industry"
+            value={values.industry}
+            onChange={(e) => onChange("industry", e.target.value)}
+            placeholder={t("organization.industry")}
+            aria-invalid={!!errors.industry}
+            required
+          />
+          {errors.industry && <p className="text-xs text-destructive mt-1">{t(errors.industry!)}</p>}
+        </div>
+
+        <div>
+          <Input
+            name="email"
+            type="email"
+            value={values.email}
+            onChange={(e) => onChange("email", e.target.value)}
+            placeholder={t("common.email")}
+            autoComplete="email"
+            aria-invalid={!!errors.email}
+            required
+          />
+          {errors.email && <p className="text-xs text-destructive mt-1">{t(errors.email!)}</p>}
+        </div>
+
+        <div>
+          <Input
+            name="phone"
+            value={values.phone ?? ""}
+            onChange={(e) => onChange("phone", e.target.value)}
+            placeholder={t("organization.phone")}
+            inputMode="tel"
+            aria-invalid={!!errors.phone}
+          />
+          {errors.phone && <p className="text-xs text-destructive mt-1">{t(errors.phone!)}</p>}
+        </div>
+
+        <div>
+          <Input
+            name="address"
+            value={values.address ?? ""}
+            onChange={(e) => onChange("address", e.target.value)}
+            placeholder={t("organization.address")}
+            aria-invalid={!!errors.address}
+          />
+          {errors.address && <p className="text-xs text-destructive mt-1">{t(errors.address!)}</p>}
+        </div>
+
+        <Button type="submit" className="mt-4 w-full" disabled={isPending}>
           {isPending ? t("organization.creating") : t("organization.create")}
         </Button>
-      </div>
+      </form>
     </div>
   );
 }

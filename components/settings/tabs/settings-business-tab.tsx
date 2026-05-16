@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -12,10 +12,27 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { BusinessHourRow } from "@/types/organization";
 import { useUpdateBusinessHours } from "@/app/api/hooks/organizations/useUpdateBusinessHours";
 import { useLocale } from "@/contexts/locale-context";
+
+const WEEKDAY_NAMES = new Set([
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+]);
+
+function isWeekday(day: string) {
+  return WEEKDAY_NAMES.has(day.toLowerCase());
+}
+
+function isMonday(day: string) {
+  return day.toLowerCase() === "monday";
+}
 
 export function SettingsBusinessTab({
   organizationId,
@@ -25,9 +42,34 @@ export function SettingsBusinessTab({
   initialHours: BusinessHourRow[];
 }) {
   const [rows, setRows] = useState<BusinessHourRow[]>(initialHours);
+  const [syncWeekdays, setSyncWeekdays] = useState(false);
 
   const { mutateAsync, isPending } = useUpdateBusinessHours();
   const { t } = useLocale();
+
+  // When sync is on, propagate Monday's values to every other weekday on every render —
+  // keeps the inputs in lockstep with whatever the admin types into Monday.
+  useEffect(() => {
+    if (!syncWeekdays) return;
+    const monday = rows.find((r) => isMonday(r.day));
+    if (!monday) return;
+
+    const needsUpdate = rows.some(
+      (r) =>
+        isWeekday(r.day) &&
+        !isMonday(r.day) &&
+        (r.enabled !== monday.enabled || r.open !== monday.open || r.close !== monday.close),
+    );
+    if (!needsUpdate) return;
+
+    setRows((prev) =>
+      prev.map((r) =>
+        isWeekday(r.day) && !isMonday(r.day)
+          ? { ...r, enabled: monday.enabled, open: monday.open, close: monday.close }
+          : r,
+      ),
+    );
+  }, [syncWeekdays, rows]);
 
   function update(i: number, patch: Partial<BusinessHourRow>) {
     setRows((r) => r.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
@@ -49,34 +91,62 @@ export function SettingsBusinessTab({
         <CardDescription>{t("settings.business.description")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {rows.map((row, i) => (
-          <div key={row.day} className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Switch
-                checked={row.enabled}
-                onCheckedChange={(v) => update(i, { enabled: v })}
-              />
-              <span className="w-28 font-medium">{row.day}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Input
-                type="time"
-                value={row.open}
-                onChange={(e) => update(i, { open: e.target.value })}
-                className="w-32"
-                disabled={!row.enabled}
-              />
-              <span className="text-muted-foreground">{t("settings.business.to")}</span>
-              <Input
-                type="time"
-                value={row.close}
-                onChange={(e) => update(i, { close: e.target.value })}
-                className="w-32"
-                disabled={!row.enabled}
-              />
-            </div>
+        <div className="flex items-center justify-between rounded-lg border bg-muted/30 p-3">
+          <div className="pr-4">
+            <Label htmlFor="sync-weekdays" className="text-sm font-medium">
+              {t("settings.business.syncWeekdays")}
+            </Label>
+            <p className="text-xs text-muted-foreground">
+              {t("settings.business.syncWeekdaysDesc")}
+            </p>
           </div>
-        ))}
+          <Switch
+            id="sync-weekdays"
+            checked={syncWeekdays}
+            onCheckedChange={setSyncWeekdays}
+          />
+        </div>
+
+        {rows.map((row, i) => {
+          const mirrored = syncWeekdays && isWeekday(row.day) && !isMonday(row.day);
+          return (
+            <div key={row.day} className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Switch
+                  checked={row.enabled}
+                  onCheckedChange={(v) => update(i, { enabled: v })}
+                  disabled={mirrored}
+                />
+                <span className="w-28 font-medium">
+                  {row.day}
+                  {mirrored && (
+                    <span className="ml-2 text-[10px] font-normal uppercase tracking-wide text-primary">
+                      {t("settings.business.synced")}
+                    </span>
+                  )}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="time"
+                  value={row.open}
+                  onChange={(e) => update(i, { open: e.target.value })}
+                  className="w-32"
+                  disabled={!row.enabled || mirrored}
+                />
+                <span className="text-muted-foreground">{t("settings.business.to")}</span>
+                <Input
+                  type="time"
+                  value={row.close}
+                  onChange={(e) => update(i, { close: e.target.value })}
+                  className="w-32"
+                  disabled={!row.enabled || mirrored}
+                />
+              </div>
+            </div>
+          );
+        })}
+
         <Separator className="my-4" />
         <Button onClick={handleSave} disabled={isPending}>
           {isPending ? t("common.saving") : t("common.save")}

@@ -16,6 +16,8 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { useUpdateBookingSettings } from "@/app/api/hooks/organizations/useUpdateBookingSettings";
 import { useLocale } from "@/contexts/locale-context";
+import { BookingSettingsSchema, type BookingSettingsInput } from "@/schemas/tennant-settings";
+import { parseApiError } from "@/lib/api-errors";
 
 export function SettingsBookingTab({
   organizationId,
@@ -33,22 +35,36 @@ export function SettingsBookingTab({
   const [bufferMin, setBufferMin] = useState(String(initial.bufferMinBetweenAppointments));
   const [advanceDays, setAdvanceDays] = useState(initial.maxAdvanceDays);
   const [leadMin, setLeadMin] = useState(initial.minLeadTimeMin);
+  const [errors, setErrors] = useState<Partial<Record<keyof BookingSettingsInput, string>>>({});
 
   const { mutateAsync, isPending } = useUpdateBookingSettings();
   const { t } = useLocale();
 
   async function handleSave() {
+    const candidate: BookingSettingsInput = {
+      autoConfirmBookings: autoConfirm,
+      bufferMinBetweenAppointments: Number(bufferMin || 0),
+      maxAdvanceDays: Number(advanceDays),
+      minLeadTimeMin: Number(leadMin),
+    };
+    const parsed = BookingSettingsSchema.safeParse(candidate);
+    if (!parsed.success) {
+      const errs: Partial<Record<keyof BookingSettingsInput, string>> = {};
+      for (const i of parsed.error.issues) {
+        const k = i.path[0] as keyof BookingSettingsInput | undefined;
+        if (k && !errs[k]) errs[k] = i.message;
+      }
+      setErrors(errs);
+      return;
+    }
+    setErrors({});
     try {
-      await mutateAsync({
-        organizationId,
-        autoConfirmBookings: autoConfirm,
-        bufferMinBetweenAppointments: Number(bufferMin || 0),
-        maxAdvanceDays: Number(advanceDays),
-        minLeadTimeMin: Number(leadMin),
-      });
+      await mutateAsync({ organizationId, ...parsed.data });
       toast.success(t("settings.booking.saved"));
-    } catch {
-      toast.error(t("settings.booking.failed"));
+    } catch (err) {
+      const e = parseApiError(err, t("settings.booking.failed"));
+      setErrors((s) => ({ ...s, ...e.fieldErrors }));
+      toast.error(e.message);
     }
   }
 
@@ -74,26 +90,34 @@ export function SettingsBookingTab({
           <Input
             type="number"
             min={0}
+            max={30}
             step={5}
             value={bufferMin}
             onChange={(e) => setBufferMin(e.target.value)}
+            aria-invalid={!!errors.bufferMinBetweenAppointments}
           />
-          <p className="text-sm text-muted-foreground">
-            {t("settings.booking.bufferTimeDesc")}
-          </p>
+          {errors.bufferMinBetweenAppointments ? (
+            <p className="text-xs text-destructive">{t(errors.bufferMinBetweenAppointments!)}</p>
+          ) : (
+            <p className="text-sm text-muted-foreground">{t("settings.booking.bufferTimeDesc")}</p>
+          )}
         </div>
 
         <div className="grid gap-2">
           <Label>{t("settings.booking.advanceBooking")}</Label>
           <Input
             type="number"
-            min={1}
+            min={7}
+            max={120}
             value={advanceDays}
             onChange={(e) => setAdvanceDays(e.target.valueAsNumber)}
+            aria-invalid={!!errors.maxAdvanceDays}
           />
-          <p className="text-sm text-muted-foreground">
-            {t("settings.booking.advanceBookingDesc")}
-          </p>
+          {errors.maxAdvanceDays ? (
+            <p className="text-xs text-destructive">{t(errors.maxAdvanceDays!)}</p>
+          ) : (
+            <p className="text-sm text-muted-foreground">{t("settings.booking.advanceBookingDesc")}</p>
+          )}
         </div>
 
         <div className="grid gap-2">
@@ -101,13 +125,17 @@ export function SettingsBookingTab({
           <Input
             type="number"
             min={0}
+            max={1440}
             step={5}
             value={leadMin}
             onChange={(e) => setLeadMin(e.target.valueAsNumber)}
+            aria-invalid={!!errors.minLeadTimeMin}
           />
-          <p className="text-sm text-muted-foreground">
-            {t("settings.booking.leadTimeDesc")}
-          </p>
+          {errors.minLeadTimeMin ? (
+            <p className="text-xs text-destructive">{t(errors.minLeadTimeMin!)}</p>
+          ) : (
+            <p className="text-sm text-muted-foreground">{t("settings.booking.leadTimeDesc")}</p>
+          )}
         </div>
 
         <Separator className="my-4" />

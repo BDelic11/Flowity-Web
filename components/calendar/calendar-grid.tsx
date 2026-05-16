@@ -121,8 +121,11 @@ export function CalendarGrid({ staff, bookings, currentDate, onDeleteBooking, on
               {t("calendar.noStaff")}
             </div>
           ) : (
-            staff.map((member) => {
-              const colBookings = bookings.filter((b) => b.workerId === member.id);
+            staff.map((member, idx) => {
+              // Bookings with no assigned worker fall into the first staff column
+              const colBookings = bookings.filter(
+                (b) => b.workerId === member.id || (!b.workerId && idx === 0)
+              );
 
               return (
                 <div key={member.id} className="relative flex-1 border-r min-w-[140px]">

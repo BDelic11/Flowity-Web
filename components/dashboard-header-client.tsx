@@ -13,8 +13,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { LogOut, User, Globe } from "lucide-react";
+import { LogOut, User, Globe, Settings } from "lucide-react";
 import { useLocale, LOCALE_LABELS, type Locale } from "@/contexts/locale-context";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 
 interface Props {
   userName: string;
@@ -46,6 +47,7 @@ export function DashboardHeaderClient({
       </div>
 
       <div className="flex items-center gap-2">
+        <NotificationBell />
         {/* Language switcher */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -88,9 +90,13 @@ export function DashboardHeaderClient({
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/dashboard/profile")}>
             <User className="mr-2 h-4 w-4" />
             {t("header.profile")}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/dashboard/settings")}>
+            <Settings className="mr-2 h-4 w-4" />
+            {t("header.settings")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleSignOut} disabled={pending}>

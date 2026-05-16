@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ServiceData } from "@/types/service";
+import ServiceSchema from "@/schemas/services-schema";
+import { useLocale } from "@/contexts/locale-context";
 
 type StaffBrief = { id: string; name: string };
 
@@ -39,19 +41,36 @@ type FormErrors = Partial<Record<keyof FormValues | "workerIds", string>>;
 
 function validate(values: FormValues, workerIds: string[]): FormErrors {
   const errors: FormErrors = {};
-  if (!values.name || values.name.trim().length < 2)
-    errors.name = "Name must be at least 2 characters.";
-  const dur = Number(values.durationMin);
-  if (isNaN(dur) || dur < 15)
-    errors.durationMin = "Duration must be at least 15 minutes.";
-  if (dur > 480) errors.durationMin = "Duration must be less than 8 hours.";
-  const price = Number(values.price);
-  if (values.price !== "" && (isNaN(price) || price < 0))
-    errors.price = "Price cannot be negative.";
-  if (!/^#([0-9A-Fa-f]{6})$/.test(values.color))
-    errors.color = "Color must be a valid hex code.";
-  if (workerIds.length === 0)
-    errors.workerIds = "Select at least one staff member.";
+  const priceNum =
+    values.price === "" ? undefined : Number(values.price);
+
+  const parsed = ServiceSchema.safeParse({
+    name: values.name,
+    description: values.description || undefined,
+    duration: Number(values.durationMin),
+    priceMin: priceNum,
+    priceMax: priceNum,
+    color: values.color,
+    assignedStaffIds: workerIds,
+  });
+
+  if (!parsed.success) {
+    for (const i of parsed.error.issues) {
+      const k = i.path[0] as string | undefined;
+      if (!k) continue;
+      const fieldKey =
+        k === "duration"
+          ? "durationMin"
+          : k === "assignedStaffIds"
+          ? "workerIds"
+          : k === "priceMin" || k === "priceMax"
+          ? "price"
+          : (k as keyof FormErrors);
+      if (!errors[fieldKey as keyof FormErrors]) {
+        (errors as Record<string, string>)[fieldKey] = i.message;
+      }
+    }
+  }
   return errors;
 }
 
@@ -63,6 +82,7 @@ export function ServiceDialog({
   staffList,
   isAdmin,
 }: ServiceDialogProps) {
+  const { t } = useLocale();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -78,10 +98,8 @@ export function ServiceDialog({
     service?.workerIds ?? []
   );
 
-  // Reset form when dialog opens with a different service
-  const [lastServiceId, setLastServiceId] = useState<string | undefined>();
-  if (service?.id !== lastServiceId) {
-    setLastServiceId(service?.id);
+  useEffect(() => {
+    if (!open) return;
     setValues({
       name: service?.name ?? "",
       description: service?.description ?? "",
@@ -91,7 +109,7 @@ export function ServiceDialog({
     });
     setSelectedWorkerIds(service?.workerIds ?? []);
     setErrors({});
-  }
+  }, [open, service?.id]);
 
   function onChange(key: keyof FormValues, value: string) {
     setValues((v) => ({ ...v, [key]: value }));
@@ -159,7 +177,7 @@ export function ServiceDialog({
               placeholder="e.g., Haircut"
             />
             {errors.name && (
-              <p className="text-sm text-destructive">{errors.name}</p>
+              <p className="text-sm text-destructive">{t(errors.name!)}</p>
             )}
           </div>
 
@@ -182,11 +200,12 @@ export function ServiceDialog({
                 type="number"
                 value={values.durationMin}
                 onChange={(e) => onChange("durationMin", e.target.value)}
-                min="15"
-                step="15"
+                min={5}
+                step={5}
+                max={480}
               />
               {errors.durationMin && (
-                <p className="text-sm text-destructive">{errors.durationMin}</p>
+                <p className="text-sm text-destructive">{t(errors.durationMin!)}</p>
               )}
             </div>
             <div className="grid gap-2">
@@ -201,7 +220,7 @@ export function ServiceDialog({
                 placeholder="0.00"
               />
               {errors.price && (
-                <p className="text-sm text-destructive">{errors.price}</p>
+                <p className="text-sm text-destructive">{t(errors.price!)}</p>
               )}
             </div>
           </div>
@@ -224,7 +243,7 @@ export function ServiceDialog({
               />
             </div>
             {errors.color && (
-              <p className="text-sm text-destructive">{errors.color}</p>
+              <p className="text-sm text-destructive">{t(errors.color!)}</p>
             )}
           </div>
 
@@ -256,7 +275,7 @@ export function ServiceDialog({
               </div>
             )}
             {errors.workerIds && (
-              <p className="text-sm text-destructive">{errors.workerIds}</p>
+              <p className="text-sm text-destructive">{t(errors.workerIds!)}</p>
             )}
           </div>
 

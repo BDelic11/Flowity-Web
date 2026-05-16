@@ -99,16 +99,15 @@ export function AppointmentDialog({
       ? new Date(initialDateISO)
       : new Date();
 
-    const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
     return {
-      date: format(local, "yyyy-MM-dd"),
-      time: format(local, "HH:mm"),
+      date: format(d, "yyyy-MM-dd"),
+      time: format(d, "HH:mm"),
       staffId: appointment?.staffId ?? initialStaffId ?? "",
       serviceId: appointment?.serviceId ?? "",
       clientName: appointment?.clientName ?? "",
       notes: appointment?.notes ?? "",
     };
-  }, [appointment, initialDateISO, initialStaffId]);
+  }, [appointment, initialDateISO, initialStaffId, open]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -126,6 +125,8 @@ export function AppointmentDialog({
 
         <Formik<FormValues>
           initialValues={init}
+          enableReinitialize
+          key={`${appointment?.id ?? "new"}-${open ? "o" : "c"}`}
           validate={(values) => {
             const errs = zodToFormikErrors(AppointmentZ.safeParse(values));
 

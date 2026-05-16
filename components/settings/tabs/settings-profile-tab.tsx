@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useUpdateMyProfile } from "@/app/api/hooks/users/useUpdateMyProfile";
 import { useLocale } from "@/contexts/locale-context";
+import { updateProfileSchema, type UpdateProfileInput } from "@/schemas/profile";
+import { parseApiError } from "@/lib/api-errors";
 
 type Props = {
   initial: {
@@ -25,23 +27,43 @@ type Props = {
 };
 
 export function SettingsProfileTab({ initial }: Props) {
-  const [firstName, setFirstName] = useState(initial.firstName);
-  const [lastName, setLastName] = useState(initial.lastName);
-  const [phone, setPhone] = useState(initial.phone);
+  const [values, setValues] = useState<UpdateProfileInput>({
+    firstName: initial.firstName,
+    lastName: initial.lastName,
+    phone: initial.phone || undefined,
+  });
+  const [errors, setErrors] = useState<Partial<Record<keyof UpdateProfileInput, string>>>({});
 
   const { mutateAsync, isPending } = useUpdateMyProfile();
   const { t } = useLocale();
 
+  function onChange<K extends keyof UpdateProfileInput>(key: K, v: UpdateProfileInput[K]) {
+    setErrors((s) => ({ ...s, [key]: undefined }));
+    setValues((s) => ({ ...s, [key]: v }));
+  }
+
   async function handleSave() {
-    if (!firstName.trim() || !lastName.trim()) {
-      toast.error(t("settings.profile.nameRequired"));
+    const parsed = updateProfileSchema.safeParse(values);
+    if (!parsed.success) {
+      const errs: Partial<Record<keyof UpdateProfileInput, string>> = {};
+      for (const i of parsed.error.issues) {
+        const k = i.path[0] as keyof UpdateProfileInput | undefined;
+        if (k && !errs[k]) errs[k] = i.message;
+      }
+      setErrors(errs);
       return;
     }
     try {
-      await mutateAsync({ firstName: firstName.trim(), lastName: lastName.trim(), phone: phone || null });
+      await mutateAsync({
+        firstName: parsed.data.firstName,
+        lastName: parsed.data.lastName,
+        phone: parsed.data.phone ?? null,
+      });
       toast.success(t("settings.profile.saved"));
-    } catch {
-      toast.error(t("settings.profile.failed"));
+    } catch (err) {
+      const e = parseApiError(err, t("settings.profile.failed"));
+      setErrors((s) => ({ ...s, ...e.fieldErrors }));
+      toast.error(e.message);
     }
   }
 
@@ -63,17 +85,21 @@ export function SettingsProfileTab({ initial }: Props) {
             <Label htmlFor="firstName">{t("settings.profile.firstName")}</Label>
             <Input
               id="firstName"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={values.firstName}
+              onChange={(e) => onChange("firstName", e.target.value)}
+              aria-invalid={!!errors.firstName}
             />
+            {errors.firstName && <p className="text-xs text-destructive">{t(errors.firstName!)}</p>}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="lastName">{t("settings.profile.lastName")}</Label>
             <Input
               id="lastName"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={values.lastName}
+              onChange={(e) => onChange("lastName", e.target.value)}
+              aria-invalid={!!errors.lastName}
             />
+            {errors.lastName && <p className="text-xs text-destructive">{t(errors.lastName!)}</p>}
           </div>
         </div>
 
@@ -82,10 +108,12 @@ export function SettingsProfileTab({ initial }: Props) {
           <Input
             id="phone"
             type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            value={values.phone ?? ""}
+            onChange={(e) => onChange("phone", e.target.value)}
             placeholder="+385 91 234 5678"
+            aria-invalid={!!errors.phone}
           />
+          {errors.phone && <p className="text-xs text-destructive">{t(errors.phone!)}</p>}
         </div>
 
         <Button onClick={handleSave} disabled={isPending}>

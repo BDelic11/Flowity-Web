@@ -1,15 +1,18 @@
-import z from "zod";
-
-const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
+import { z } from "zod";
+import { dateField, timeField, uuidField } from "./_shared";
 
 const AppointmentZ = z.object({
-  clientName: z.string().trim().min(2, "Too short").max(120, "Too long"),
-  staffId: z.string().min(1, "Required"),
-  serviceId: z.string().min(1, "Required"),
-  date: z.string().regex(dateRegex, "Invalid date"),
-  time: z.string().regex(timeRegex, "Invalid time"),
-  notes: z.string().max(1000, "Too long").optional(),
+  clientName: z
+    .string()
+    .trim()
+    .min(2, "validation.booking.clientNameTooShort")
+    .max(120, "validation.booking.clientNameTooLong"),
+  staffId: uuidField,
+  serviceId: uuidField,
+  date: dateField,
+  time: timeField,
+  notes: z.string().max(2000, "validation.notes.tooLong").optional(),
 });
 
+export default AppointmentZ;
 export type AppointmentInput = z.infer<typeof AppointmentZ>;

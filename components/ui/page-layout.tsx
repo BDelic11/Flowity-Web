@@ -1,4 +1,5 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -7,7 +8,12 @@ interface PageLayoutProps {
 
 const PageLayout = ({ children, className }: PageLayoutProps) => {
   return (
-    <section className={`${className} px-4 sm:px-6 md:px-12 py-12`}>
+    <section
+      className={cn(
+        "mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10",
+        className,
+      )}
+    >
       {children}
     </section>
   );

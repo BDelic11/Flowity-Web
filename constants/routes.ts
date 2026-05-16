@@ -4,10 +4,20 @@ const routes = {
   calendar: "/dashboard/calendar",
   services: "/dashboard/services",
   settings: "/dashboard/settings",
+  clients: "/dashboard/clients",
+  profile: "/dashboard/profile",
+  export: "/dashboard/export",
   staff: "/dashboard/staff",
+  plans: "/plans",
   login: "/login",
   register: "/register",
   forbidden: "/forbidden",
+  products: "/dashboard/products",
+  selectOrganization: "/select-organization",
+  createOrganization: "/create-organization",
+  checkEmail: "/check-email",
+  verifyEmail: "/verify-email",
+  setPassword: "/set-password",
 };
 
 const apiRoutes = {
@@ -25,6 +35,8 @@ const apiRoutes = {
   services: "/services",
 
   staff: "/staff",
+  customers: "/customers",
+  subscriptions: "/subscriptions",
 
   organizations: "/organizations",
   dashboardMetrics: "/dashboard/metrics",

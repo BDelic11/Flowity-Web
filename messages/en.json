@@ -8,7 +8,13 @@
     "add": "Add",
     "email": "Email",
     "loading": "Loading...",
-    "free": "Free"
+    "free": "Free",
+    "confirmDelete": {
+      "title": "Delete?",
+      "titleNamed": "Delete \"{{name}}\"?",
+      "description": "This action cannot be undone.",
+      "confirm": "Delete"
+    }
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -18,10 +24,16 @@
     "staff": "Staff",
     "openMenu": "Open menu",
     "menu": "Menu",
-    "whatsapp": "WhatsApp"
+    "whatsapp": "WhatsApp",
+    "clients": "Clients",
+    "profile": "Profile",
+    "export": "Export",
+    "products": "Materials",
+    "organizations": "Salons"
   },
   "header": {
     "profile": "Profile",
+    "settings": "Settings",
     "signOut": "Sign out",
     "signingOut": "Signing out..."
   },
@@ -42,7 +54,20 @@
     "todaysRevenue": "Today's Revenue",
     "fromConfirmedBookings": "from confirmed bookings",
     "thisWeek": "This Week",
-    "appointmentsBooked": "appointments booked"
+    "appointmentsBooked": "appointments booked",
+    "todaysSchedule": "Today's Schedule",
+    "remainingToday": "{{count}} left today",
+    "upcomingSchedule": "Upcoming bookings",
+    "nextCount": "Next {{count}}",
+    "upNext": "Up next",
+    "inProgress": "In progress",
+    "emptyScheduleTitle": "Nothing left today",
+    "emptyScheduleDesc": "Enjoy the breather — your next booking will appear here.",
+    "emptyUpcomingTitle": "No upcoming bookings",
+    "emptyUpcomingDesc": "When clients book, they'll show up here.",
+    "tomorrow": "Tomorrow",
+    "noStaff": "Unassigned",
+    "with": "with"
   },
   "calendar": {
     "noOrganization": "No organization found. Please create an organization first.",
@@ -78,7 +103,10 @@
       "description": "Set your salon's operating hours",
       "to": "to",
       "saved": "Business hours saved",
-      "failed": "Failed to save business hours"
+      "failed": "Failed to save business hours",
+      "syncWeekdays": "Same hours Mon–Fri",
+      "syncWeekdaysDesc": "Tue–Fri mirror Monday's hours. Turn off to edit each day individually.",
+      "synced": "Synced"
     },
     "booking": {
       "title": "Booking Settings",
@@ -132,7 +160,9 @@
     "continueWithGoogle": "Continue with Google",
     "googleFailed": "Google sign-in failed. Please try again.",
     "or": "or",
-    "signingIn": "Signing in..."
+    "signingIn": "Signing in...",
+    "passwordHint": "Min 8 chars, with upper/lowercase and a digit",
+    "confirmPassword": "Confirm password"
   },
   "organization": {
     "create": "Create Organization",
@@ -180,7 +210,33 @@
     "deleteFailed": "Delete failed",
     "updated": "Staff member updated",
     "added": "Staff member added",
-    "saveFailed": "Failed to save staff member"
+    "saveFailed": "Failed to save staff member",
+    "emptyTitle": "No staff yet",
+    "emptyDesc": "Add your first team member to start assigning appointments and tracking schedules.",
+    "inviteTitle": "Invite Staff Member",
+    "editTitle": "Edit Staff Member",
+    "inviteDesc": "We'll email them a link to confirm their address and set their own password.",
+    "editDesc": "Update team member details.",
+    "inviteHint": "An invitation will be sent to this address. The account stays inactive until they confirm and set a password.",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phoneOptional": "Phone (optional)",
+    "activeLabel": "Active",
+    "activeDesc": "Can accept appointments",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "update": "Update",
+    "sendInvite": "Send invite",
+    "invited": "Invitation sent",
+    "pending": "Pending invite"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No new notifications",
+    "lowStock": "Low stock",
+    "outOfStock": "Out of stock",
+    "newBooking": "New booking"
   },
   "appointments": {
     "editTitle": "Edit Appointment",
@@ -217,5 +273,223 @@
     "start": "Start",
     "end": "End",
     "staff": "Staff"
+  },
+  "validation": {
+    "required": "Required",
+    "tooShort": "Too short",
+    "tooLong": "Too long",
+    "invalid": "Invalid value",
+    "email": {
+      "required": "Email is required",
+      "invalid": "Please enter a valid email",
+      "tooLong": "Email is too long"
+    },
+    "password": {
+      "required": "Password is required",
+      "min8": "Password must be at least 8 characters",
+      "max72": "Password must be at most 72 characters",
+      "uppercase": "Password must contain an uppercase letter",
+      "lowercase": "Password must contain a lowercase letter",
+      "digit": "Password must contain a digit",
+      "confirm": "Please confirm your password",
+      "mismatch": "Passwords must match"
+    },
+    "name": {
+      "required": "Name is required",
+      "tooShort": "Name is too short",
+      "tooLong": "Name is too long",
+      "invalid": "Only letters, hyphens and apostrophes are allowed"
+    },
+    "phone": {
+      "invalid": "Enter a valid phone number (5–32 chars)"
+    },
+    "color": {
+      "invalid": "Color must be in #RRGGBB format"
+    },
+    "url": {
+      "invalid": "Enter a valid URL",
+      "scheme": "Only http(s) URLs are allowed",
+      "tooLong": "URL is too long"
+    },
+    "uuid": {
+      "invalid": "Invalid id"
+    },
+    "address": {
+      "required": "Address is required",
+      "tooLong": "Address is too long"
+    },
+    "industry": {
+      "required": "Industry is required"
+    },
+    "tz": {
+      "required": "Time zone is required"
+    },
+    "salonName": {
+      "required": "Salon name is required"
+    },
+    "duration": {
+      "required": "Duration is required",
+      "tooShort": "Duration must be at least 5 minutes",
+      "tooLong": "Duration must be less than 8 hours",
+      "notInt": "Duration must be a whole number"
+    },
+    "price": {
+      "required": "Price is required",
+      "negative": "Price cannot be negative",
+      "tooHigh": "Price is too high",
+      "range": "Max price must be ≥ min price"
+    },
+    "threshold": {
+      "required": "Stock threshold is required",
+      "negative": "Threshold cannot be negative",
+      "tooHigh": "Threshold is too high"
+    },
+    "stock": {
+      "required": "Stock is required",
+      "negative": "Stock cannot be negative",
+      "tooHigh": "Stock is too high"
+    },
+    "unit": {
+      "invalid": "Choose a valid unit"
+    },
+    "quantity": {
+      "required": "Quantity is required",
+      "gtZero": "Quantity must be greater than 0",
+      "tooHigh": "Quantity is too high"
+    },
+    "delta": {
+      "required": "Change is required",
+      "zero": "Change cannot be 0",
+      "outOfRange": "Change is out of range"
+    },
+    "note": {
+      "tooLong": "Note is too long"
+    },
+    "description": {
+      "tooLong": "Description is too long"
+    },
+    "category": {
+      "tooLong": "Category is too long"
+    },
+    "notes": {
+      "tooLong": "Notes are too long"
+    },
+    "staff": {
+      "required": "Select at least one staff member"
+    },
+    "booking": {
+      "endBeforeStart": "End must be after start",
+      "tooShort": "Booking must last at least 5 minutes",
+      "tooLong": "Booking can be at most 8 hours",
+      "past": "Cannot book in the past",
+      "clientNameTooShort": "Client name is too short",
+      "clientNameTooLong": "Client name is too long"
+    },
+    "buffer": {
+      "range": "Buffer must be between 0 and 120 minutes"
+    },
+    "businessHours": {
+      "length": "All 7 days are required",
+      "dupDays": "Days must be unique",
+      "openClose": "Open and close times are required",
+      "closeBeforeOpen": "Close must be after open",
+      "daysOrder": "Days must be in order Monday..Sunday",
+      "invalidDay": "Unknown day name"
+    },
+    "bookingSettings": {
+      "bufferRange": "Buffer between bookings must be 0–30 min",
+      "advanceRange": "Advance booking must be 7–120 days",
+      "leadRange": "Lead time must be 0–1440 min"
+    },
+    "time": {
+      "invalid": "Time must be in HH:mm format"
+    },
+    "date": {
+      "invalid": "Invalid date"
+    },
+    "whatsapp": {
+      "required": "Phone number is required",
+      "tooLong": "Phone number is too long",
+      "format": "Use E.164 format (e.g. +14155238886)"
+    }
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "back": "Back",
+    "done": "Let's go",
+    "welcome": {
+      "title": "Welcome to Flowity",
+      "desc": "Your digital salon assistant. Quick tour — under a minute."
+    },
+    "calendar": {
+      "title": "All bookings in one place",
+      "desc": "See your whole team's schedule in real time. Add, edit or cancel a booking in a few clicks — no double-bookings, no missed appointments."
+    },
+    "whatsapp": {
+      "title": "WhatsApp AI assistant 24/7",
+      "desc": "Clients book directly via WhatsApp — the AI chats with them, finds open slots, and writes the booking into your calendar automatically."
+    },
+    "services": {
+      "title": "Define your services and team",
+      "desc": "Add services with prices, duration and colours. Pick which staff perform which services — the AI will suggest the right matches to clients."
+    },
+    "products": {
+      "title": "Track stock automatically",
+      "desc": "Dyes, shampoos, tools — see what's left and get low-stock alerts. Each service tracks its own consumption."
+    },
+    "ready": {
+      "title": "You're ready!",
+      "desc": "Start setting up your salon. Everything is configured — visit Settings any time to fine-tune."
+    }
+  },
+  "verifyEmail": {
+    "checkInbox": "Check your inbox",
+    "sentTo": "We sent a verification link to",
+    "clickLink": "Open the email and click the button to confirm your address. Don't see it? Check Spam.",
+    "resend": "Resend link",
+    "resent": "Link sent",
+    "resendOk": "A new verification link is on its way.",
+    "resendFail": "Could not resend. Please try again in a moment.",
+    "continueAnyway": "Continue without verifying",
+    "checking": "Verifying your email...",
+    "checkingDesc": "One moment — checking your link.",
+    "success": "Email verified!",
+    "successDesc": "Your account is now fully active.",
+    "error": "Link is invalid",
+    "errorDesc": "This link has expired or has already been used. Request a new one from the verification page.",
+    "requestNew": "Request a new link",
+    "continue": "Go to dashboard",
+    "banner": "Verify your email to unlock all features.",
+    "bannerCta": "Resend"
+  },
+  "profile": {
+    "role": "Role",
+    "organization": "Organization",
+    "roleAdmin": "Admin",
+    "roleWorker": "Worker",
+    "roleAdminWorker": "Admin & Worker",
+    "bookable": {
+      "title": "I also serve clients",
+      "description": "Turn this on so your name shows up next to your team in the booking flow.",
+      "toggleLabel": "Toggle bookable mode",
+      "servicesTitle": "Services I perform",
+      "servicesDesc": "Pick at least one — clients can only book you for these.",
+      "noServices": "Add services first, then come back here to pick the ones you perform.",
+      "pickAtLeastOne": "Pick at least one service.",
+      "save": "Save",
+      "saved": "Bookable settings saved.",
+      "failed": "Could not save. Try again in a moment."
+    }
+  },
+  "setPassword": {
+    "title": "Set your password",
+    "description": "Choose a password to activate your account. You'll be signed in right away.",
+    "submit": "Activate account",
+    "submitting": "Activating...",
+    "failed": "Could not activate. Try requesting a fresh invite.",
+    "invalidToken": "This invitation link is invalid or has expired.",
+    "invalidTitle": "Invalid invite",
+    "invalidDesc": "Ask your admin to send a new invitation."
   }
 }

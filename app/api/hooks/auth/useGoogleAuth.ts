@@ -19,7 +19,10 @@ export const useGoogleAuth = () => {
     mutationFn: googleAuth,
     onSuccess: async (data) => {
       localStorage.setItem("token", data.access_token);
-      await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      // Refetch (not just invalidate) so callers can route to /plans or /dashboard
+      // with a populated AuthContext on the very next render — avoids flashes of
+      // login-redirect logic on protected pages.
+      await queryClient.refetchQueries({ queryKey: ["currentUser"] });
     },
   });
 };

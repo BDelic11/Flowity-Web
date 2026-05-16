@@ -8,7 +8,13 @@
     "add": "Dodaj",
     "email": "E-pošta",
     "loading": "Učitavanje...",
-    "free": "Besplatno"
+    "free": "Besplatno",
+    "confirmDelete": {
+      "title": "Obrisati?",
+      "titleNamed": "Obrisati \"{{name}}\"?",
+      "description": "Ova radnja se ne može poništiti.",
+      "confirm": "Obriši"
+    }
   },
   "nav": {
     "dashboard": "Nadzorna ploča",
@@ -18,10 +24,16 @@
     "staff": "Osoblje",
     "openMenu": "Otvori izbornik",
     "menu": "Izbornik",
-    "whatsapp": "WhatsApp"
+    "whatsapp": "WhatsApp",
+    "clients": "Klijenti",
+    "profile": "Profil",
+    "export": "Izvoz",
+    "products": "Materijali",
+    "organizations": "Saloni"
   },
   "header": {
     "profile": "Profil",
+    "settings": "Postavke",
     "signOut": "Odjava",
     "signingOut": "Odjava u tijeku..."
   },
@@ -42,7 +54,20 @@
     "todaysRevenue": "Današnji prihod",
     "fromConfirmedBookings": "od potvrđenih rezervacija",
     "thisWeek": "Ovaj tjedan",
-    "appointmentsBooked": "zakazanih termina"
+    "appointmentsBooked": "zakazanih termina",
+    "todaysSchedule": "Današnji raspored",
+    "remainingToday": "Još {{count}} danas",
+    "upcomingSchedule": "Nadolazeći termini",
+    "nextCount": "Sljedećih {{count}}",
+    "upNext": "Sljedeće",
+    "inProgress": "U tijeku",
+    "emptyScheduleTitle": "Više nema termina danas",
+    "emptyScheduleDesc": "Iskoristite predah — sljedeća rezervacija će se pojaviti ovdje.",
+    "emptyUpcomingTitle": "Nema nadolazećih termina",
+    "emptyUpcomingDesc": "Kad klijenti rezerviraju, pojavit će se ovdje.",
+    "tomorrow": "Sutra",
+    "noStaff": "Nedodijeljeno",
+    "with": "kod"
   },
   "calendar": {
     "noOrganization": "Organizacija nije pronađena. Molimo prvo stvorite organizaciju.",
@@ -78,7 +103,10 @@
       "description": "Postavite radno vrijeme vašeg salona",
       "to": "do",
       "saved": "Radno vrijeme je spremljeno",
-      "failed": "Greška pri spremanju radnog vremena"
+      "failed": "Greška pri spremanju radnog vremena",
+      "syncWeekdays": "Isto radno vrijeme pon–pet",
+      "syncWeekdaysDesc": "Uto–pet preslikavaju ponedjeljak. Isključite za uređivanje svakog dana posebno.",
+      "synced": "Sinkronizirano"
     },
     "booking": {
       "title": "Postavke rezervacija",
@@ -132,7 +160,9 @@
     "continueWithGoogle": "Nastavi s Googleom",
     "googleFailed": "Google prijava nije uspjela. Pokušajte ponovo.",
     "or": "ili",
-    "signingIn": "Prijava..."
+    "signingIn": "Prijava...",
+    "passwordHint": "Min 8 znakova, veliko/malo slovo i broj",
+    "confirmPassword": "Potvrdi lozinku"
   },
   "organization": {
     "create": "Stvori organizaciju",
@@ -180,7 +210,33 @@
     "deleteFailed": "Brisanje nije uspjelo",
     "updated": "Član osoblja ažuriran",
     "added": "Član osoblja dodan",
-    "saveFailed": "Greška pri spremanju člana osoblja"
+    "saveFailed": "Greška pri spremanju člana osoblja",
+    "emptyTitle": "Još nema osoblja",
+    "emptyDesc": "Dodajte prvog člana tima kako biste počeli s dodjeljivanjem termina.",
+    "inviteTitle": "Pozovi člana osoblja",
+    "editTitle": "Uredi člana osoblja",
+    "inviteDesc": "Poslat ćemo mu poveznicu za potvrdu e-pošte i postavljanje lozinke.",
+    "editDesc": "Ažurirajte podatke člana tima.",
+    "inviteHint": "Pozivnica se šalje na ovu adresu. Račun ostaje neaktivan dok je ne potvrdi i postavi lozinku.",
+    "firstName": "Ime",
+    "lastName": "Prezime",
+    "email": "E-pošta",
+    "phoneOptional": "Telefon (neobavezno)",
+    "activeLabel": "Aktivan",
+    "activeDesc": "Može primati termine",
+    "cancel": "Odustani",
+    "saving": "Spremam...",
+    "update": "Ažuriraj",
+    "sendInvite": "Pošalji pozivnicu",
+    "invited": "Pozivnica poslana",
+    "pending": "Čeka potvrdu"
+  },
+  "notifications": {
+    "title": "Obavijesti",
+    "empty": "Nema novih obavijesti",
+    "lowStock": "Niska zaliha",
+    "outOfStock": "Nema na zalihi",
+    "newBooking": "Nova rezervacija"
   },
   "appointments": {
     "editTitle": "Uredi termin",
@@ -217,5 +273,223 @@
     "start": "Početak",
     "end": "Kraj",
     "staff": "Osoblje"
+  },
+  "validation": {
+    "required": "Obavezno polje",
+    "tooShort": "Prekratko",
+    "tooLong": "Predugo",
+    "invalid": "Nevažeća vrijednost",
+    "email": {
+      "required": "E-pošta je obavezna",
+      "invalid": "Unesite važeću e-poštu",
+      "tooLong": "E-pošta je predugačka"
+    },
+    "password": {
+      "required": "Lozinka je obavezna",
+      "min8": "Lozinka mora imati najmanje 8 znakova",
+      "max72": "Lozinka može imati najviše 72 znaka",
+      "uppercase": "Lozinka mora sadržavati veliko slovo",
+      "lowercase": "Lozinka mora sadržavati malo slovo",
+      "digit": "Lozinka mora sadržavati broj",
+      "confirm": "Potvrdite lozinku",
+      "mismatch": "Lozinke se ne podudaraju"
+    },
+    "name": {
+      "required": "Ime je obavezno",
+      "tooShort": "Ime je prekratko",
+      "tooLong": "Ime je predugačko",
+      "invalid": "Dozvoljena su slova, crtice i apostrofi"
+    },
+    "phone": {
+      "invalid": "Unesite važeći broj telefona (5–32 znaka)"
+    },
+    "color": {
+      "invalid": "Boja mora biti u formatu #RRGGBB"
+    },
+    "url": {
+      "invalid": "Unesite važeći URL",
+      "scheme": "Dozvoljeni su samo http(s) URL-ovi",
+      "tooLong": "URL je predugačak"
+    },
+    "uuid": {
+      "invalid": "Nevažeći ID"
+    },
+    "address": {
+      "required": "Adresa je obavezna",
+      "tooLong": "Adresa je predugačka"
+    },
+    "industry": {
+      "required": "Djelatnost je obavezna"
+    },
+    "tz": {
+      "required": "Vremenska zona je obavezna"
+    },
+    "salonName": {
+      "required": "Naziv salona je obavezan"
+    },
+    "duration": {
+      "required": "Trajanje je obavezno",
+      "tooShort": "Trajanje mora biti najmanje 5 minuta",
+      "tooLong": "Trajanje može biti najviše 8 sati",
+      "notInt": "Trajanje mora biti cijeli broj"
+    },
+    "price": {
+      "required": "Cijena je obavezna",
+      "negative": "Cijena ne može biti negativna",
+      "tooHigh": "Cijena je previsoka",
+      "range": "Maksimalna cijena mora biti ≥ minimalne"
+    },
+    "threshold": {
+      "required": "Prag zalihe je obavezan",
+      "negative": "Prag zalihe ne može biti negativan",
+      "tooHigh": "Prag zalihe je previsok"
+    },
+    "stock": {
+      "required": "Količina je obavezna",
+      "negative": "Količina ne može biti negativna",
+      "tooHigh": "Količina je previsoka"
+    },
+    "unit": {
+      "invalid": "Odaberite važeću mjernu jedinicu"
+    },
+    "quantity": {
+      "required": "Količina je obavezna",
+      "gtZero": "Količina mora biti veća od 0",
+      "tooHigh": "Količina je previsoka"
+    },
+    "delta": {
+      "required": "Promjena je obavezna",
+      "zero": "Promjena ne može biti 0",
+      "outOfRange": "Promjena je izvan dozvoljenog raspona"
+    },
+    "note": {
+      "tooLong": "Napomena je predugačka"
+    },
+    "description": {
+      "tooLong": "Opis je predugačak"
+    },
+    "category": {
+      "tooLong": "Kategorija je predugačka"
+    },
+    "notes": {
+      "tooLong": "Napomena je predugačka"
+    },
+    "staff": {
+      "required": "Odaberite barem jednog djelatnika"
+    },
+    "booking": {
+      "endBeforeStart": "Završetak mora biti nakon početka",
+      "tooShort": "Termin mora trajati najmanje 5 minuta",
+      "tooLong": "Termin može trajati najviše 8 sati",
+      "past": "Termin ne može biti u prošlosti",
+      "clientNameTooShort": "Ime klijenta je prekratko",
+      "clientNameTooLong": "Ime klijenta je predugačko"
+    },
+    "buffer": {
+      "range": "Pauza mora biti između 0 i 120 minuta"
+    },
+    "businessHours": {
+      "length": "Potrebno je svih 7 dana",
+      "dupDays": "Dani moraju biti jedinstveni",
+      "openClose": "Otvaranje i zatvaranje su obavezni",
+      "closeBeforeOpen": "Zatvaranje mora biti nakon otvaranja",
+      "daysOrder": "Dani moraju biti redoslijedom Ponedjeljak..Nedjelja",
+      "invalidDay": "Nepoznat naziv dana"
+    },
+    "bookingSettings": {
+      "bufferRange": "Pauza između termina mora biti 0–30 min",
+      "advanceRange": "Maksimalna najava 7–120 dana",
+      "leadRange": "Minimalna najava 0–1440 min"
+    },
+    "time": {
+      "invalid": "Vrijeme mora biti u formatu HH:mm"
+    },
+    "date": {
+      "invalid": "Nevažeći datum"
+    },
+    "whatsapp": {
+      "required": "Broj telefona je obavezan",
+      "tooLong": "Broj telefona je predugačak",
+      "format": "Koristite E.164 format (npr. +14155238886)"
+    }
+  },
+  "onboarding": {
+    "skip": "Preskoči",
+    "next": "Dalje",
+    "back": "Natrag",
+    "done": "Krenimo",
+    "welcome": {
+      "title": "Dobrodošli u Flowity",
+      "desc": "Vaš digitalni asistent za upravljanje salonom. Pokazat ćemo vam ukratko što sve možete — traje manje od minute."
+    },
+    "calendar": {
+      "title": "Sve rezervacije na jednom mjestu",
+      "desc": "Kalendar prikazuje termine svih djelatnika u realnom vremenu. Dodajte, uredite ili otkažite rezervaciju u par klikova — bez dvostrukih bookinga i propuštenih termina."
+    },
+    "whatsapp": {
+      "title": "WhatsApp AI asistent 24/7",
+      "desc": "Klijenti rezerviraju termine direktno preko WhatsAppa — AI razgovara s njima, pronalazi slobodne termine i automatski upisuje rezervaciju u kalendar."
+    },
+    "services": {
+      "title": "Definirajte svoje usluge i tim",
+      "desc": "Dodajte usluge sa cijenama, trajanjem i bojama. Postavite koji djelatnici izvode koje usluge — AI će predlagati prave kombinacije klijentima."
+    },
+    "products": {
+      "title": "Pratite zalihe automatski",
+      "desc": "Boje, šamponi, alati — pratite koliko vam je preostalo i dobivajte upozorenja kad nešto pri kraju. Sa svakom uslugom znate koliko ste potrošili."
+    },
+    "ready": {
+      "title": "Spremni ste!",
+      "desc": "Krenite postaviti svoj prvi salon. Sve je konfigurirano i možete u svakom trenutku posjetiti Postavke kako biste prilagodili rad."
+    }
+  },
+  "verifyEmail": {
+    "checkInbox": "Provjerite poštu",
+    "sentTo": "Poslali smo poveznicu za potvrdu na",
+    "clickLink": "Otvorite poruku i kliknite gumb da potvrdite svoju adresu. Ako nemate poruku, provjerite Spam.",
+    "resend": "Pošalji ponovno",
+    "resent": "Poveznica poslana",
+    "resendOk": "Nova poveznica poslana na vašu e-poštu.",
+    "resendFail": "Slanje nije uspjelo. Pokušajte za par minuta.",
+    "continueAnyway": "Nastavi bez potvrde",
+    "checking": "Potvrđujemo vašu adresu...",
+    "checkingDesc": "Trenutak — provjeravamo vašu poveznicu.",
+    "success": "E-pošta potvrđena!",
+    "successDesc": "Vaš račun je sada potpuno aktivan.",
+    "error": "Poveznica nije važeća",
+    "errorDesc": "Poveznica je istekla ili je već iskorištena. Pošaljite novu sa stranice za potvrdu.",
+    "requestNew": "Zatraži novu poveznicu",
+    "continue": "Idi na nadzornu ploču",
+    "banner": "Potvrdite svoju e-poštu da otključate sve mogućnosti.",
+    "bannerCta": "Pošalji ponovno"
+  },
+  "profile": {
+    "role": "Uloga",
+    "organization": "Organizacija",
+    "roleAdmin": "Administrator",
+    "roleWorker": "Radnik",
+    "roleAdminWorker": "Administrator i radnik",
+    "bookable": {
+      "title": "I ja primam klijente",
+      "description": "Uključite ovo da se vaše ime pojavi pored tima u rezervacijama.",
+      "toggleLabel": "Uključi/isključi način rada",
+      "servicesTitle": "Usluge koje obavljam",
+      "servicesDesc": "Odaberite barem jednu — klijenti vas mogu rezervirati samo za odabrane.",
+      "noServices": "Prvo dodajte usluge, zatim se vratite kako biste odabrali svoje.",
+      "pickAtLeastOne": "Odaberite barem jednu uslugu.",
+      "save": "Spremi",
+      "saved": "Postavke spremljene.",
+      "failed": "Spremanje nije uspjelo. Pokušajte ponovno."
+    }
+  },
+  "setPassword": {
+    "title": "Postavite lozinku",
+    "description": "Odaberite lozinku za aktivaciju računa. Odmah ćete biti prijavljeni.",
+    "submit": "Aktiviraj račun",
+    "submitting": "Aktiviram...",
+    "failed": "Aktivacija nije uspjela. Zatražite novu pozivnicu.",
+    "invalidToken": "Pozivnica je neispravna ili je istekla.",
+    "invalidTitle": "Neispravna pozivnica",
+    "invalidDesc": "Zatražite od administratora novu pozivnicu."
   }
 }

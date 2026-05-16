@@ -10,13 +10,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Clock, Edit, Trash2, EuroIcon, Users } from "lucide-react";
+import { Plus, Clock, Edit, Trash2, EuroIcon, Users, Package } from "lucide-react";
 import { ServiceDialog } from "@/components/services/service-dialog";
+import { ServiceProductsDialog } from "@/components/services/service-products-dialog";
 import { useCreateService } from "@/app/api/hooks/services/useCreateService";
 import { useUpdateService } from "@/app/api/hooks/services/useUpdateService";
 import { useDeleteService } from "@/app/api/hooks/services/useDeleteService";
-import { useConfirm } from "@/hooks/useConfirm";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
 import PageLayout from "../ui/page-layout";
+import { EmptyState, ServicesIllustration } from "@/components/ui/empty-state";
 import { toast } from "sonner";
 import { ServiceData } from "@/types/service";
 import { useLocale } from "@/contexts/locale-context";
@@ -36,7 +38,9 @@ export default function ServicesClient({
 }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selected, setSelected] = useState<ServiceData | undefined>();
-  const { confirm, ConfirmPortal } = useConfirm();
+  const [productsDialogOpen, setProductsDialogOpen] = useState(false);
+  const [productsService, setProductsService] = useState<ServiceData | undefined>();
+  const { askDelete, ConfirmPortal } = useDeleteConfirm();
   const { t } = useLocale();
 
   const { mutateAsync: createServiceMutation } = useCreateService();
@@ -53,12 +57,16 @@ export default function ServicesClient({
     setDialogOpen(true);
   }
 
+  function handleProducts(item: ServiceData) {
+    setProductsService(item);
+    setProductsDialogOpen(true);
+  }
+
   async function handleDelete(serviceId: string) {
-    const ok = await confirm({
+    const ok = await askDelete({
       title: t("services.deleteConfirmTitle"),
       description: t("services.deleteConfirmDesc"),
       confirmLabel: t("services.delete"),
-      confirmVariant: "destructive",
     });
     if (!ok) return;
 
@@ -183,11 +191,20 @@ export default function ServicesClient({
                   </div>
 
                   {isAdmin && (
-                    <div className="mt-4 flex gap-2">
+                    <div className="mt-4 flex gap-2 flex-wrap">
                       <Button
                         variant="outline"
                         size="sm"
                         className="flex-1 gap-2 bg-transparent"
+                        onClick={() => handleProducts(service)}
+                      >
+                        <Package className="h-4 w-4" />
+                        Materijali
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2 bg-transparent"
                         onClick={() => handleEdit(service)}
                       >
                         <Edit className="h-4 w-4" />
@@ -209,25 +226,33 @@ export default function ServicesClient({
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="text-6xl mb-4">✨</div>
-            <h3 className="text-2xl font-semibold mb-2">
-              {t("services.emptyTitle")}
-            </h3>
-            <p className="text-muted-foreground mb-6 max-w-md">
-              {t("services.emptyDesc")}
-            </p>
-            {isAdmin && (
-              <Button onClick={handleAddNew} className="gap-2">
-                <Plus className="h-4 w-4" />
-                {t("services.createFirst")}
-              </Button>
-            )}
-          </div>
+          <EmptyState
+            illustration={<ServicesIllustration />}
+            title={t("services.emptyTitle")}
+            description={t("services.emptyDesc")}
+            action={
+              isAdmin ? (
+                <Button onClick={handleAddNew} className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  {t("services.createFirst")}
+                </Button>
+              ) : null
+            }
+          />
         )}
       </div>
 
       {ConfirmPortal}
+
+      {productsService && (
+        <ServiceProductsDialog
+          open={productsDialogOpen}
+          onOpenChange={setProductsDialogOpen}
+          serviceId={productsService.id}
+          serviceName={productsService.name}
+          organizationId={organizationId}
+        />
+      )}
 
       <ServiceDialog
         open={dialogOpen}

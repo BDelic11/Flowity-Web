@@ -2,10 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  useRegister,
-  getApiErrorMessage,
-} from "@/app/api/hooks/auth/useRegister";
+import { useRegister } from "@/app/api/hooks/auth/useRegister";
+import { parseApiError } from "@/lib/api-errors";
 import { useGoogleAuth } from "@/app/api/hooks/auth/useGoogleAuth";
 import { GoogleLoginButton } from "@/components/auth/google-login-button";
 import { registerSchema, type RegisterValues } from "@/schemas/register";
@@ -18,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { routes } from "@/constants/routes";
 import Link from "next/link";
@@ -33,7 +32,9 @@ export default function RegisterPage() {
     firstName: "",
     lastName: "",
     password: "",
+    confirmPassword: "",
   });
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof RegisterValues, string>>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const { mutateAsync: registerUser } = useRegister();
@@ -43,14 +44,11 @@ export default function RegisterPage() {
     justRegistered.current = true;
     try {
       const result = await googleLogin(accessToken);
-      if (result.is_new_user) {
-        router.push("/create-organization");
-      } else {
-        router.push(routes.dashboard);
-      }
-    } catch {
+      router.push(result.is_new_user ? routes.plans : routes.dashboard);
+    } catch (err) {
       justRegistered.current = false;
-      setFormError(t("auth.googleFailed"));
+      const parsed = parseApiError(err, t("auth.googleFailed"));
+      setFormError(parsed.message);
     }
   }
   const { t } = useLocale();
@@ -70,6 +68,7 @@ export default function RegisterPage() {
     v: RegisterValues[K]
   ) {
     setFormError(null);
+    setFieldErrors((s) => ({ ...s, [key]: undefined }));
     setValues((s) => ({ ...s, [key]: v }));
   }
 
@@ -79,22 +78,26 @@ export default function RegisterPage() {
 
     const parsed = registerSchema.safeParse(values);
     if (!parsed.success) {
-      setFormError(
-        parsed.error.issues.map((i) => i.message).join(", ") ?? t("auth.invalidInput")
-      );
+      const errs: Partial<Record<keyof RegisterValues, string>> = {};
+      for (const i of parsed.error.issues) {
+        const k = i.path[0] as keyof RegisterValues | undefined;
+        if (k && !errs[k]) errs[k] = i.message;
+      }
+      setFieldErrors(errs);
       return;
     }
 
     setIsPending(true);
-    justRegistered.current = true; // suppress the dashboard redirect
+    justRegistered.current = true;
     try {
-      await registerUser(values);
-      router.push("/create-organization");
+      const { confirmPassword: _cp, ...payload } = parsed.data;
+      await registerUser(payload);
+      router.push(routes.checkEmail);
     } catch (error) {
       justRegistered.current = false;
-      setFormError(
-        getApiErrorMessage(error, t("auth.registerFailed"))
-      );
+      const parsedErr = parseApiError(error, t("auth.registerFailed"));
+      setFieldErrors((s) => ({ ...s, ...parsedErr.fieldErrors }));
+      setFormError(parsedErr.message);
       setIsPending(false);
     }
   }
@@ -117,8 +120,10 @@ export default function RegisterPage() {
                 value={values.email}
                 onChange={(e) => onChange("email", e.target.value)}
                 autoComplete="email"
+                aria-invalid={!!fieldErrors.email}
                 required
               />
+              {fieldErrors.email && <p className="text-xs text-destructive">{t(fieldErrors.email)}</p>}
             </div>
 
             <div className="grid gap-2">
@@ -128,8 +133,10 @@ export default function RegisterPage() {
                 type="text"
                 value={values.firstName}
                 onChange={(e) => onChange("firstName", e.target.value)}
+                aria-invalid={!!fieldErrors.firstName}
                 required
               />
+              {fieldErrors.firstName && <p className="text-xs text-destructive">{t(fieldErrors.firstName)}</p>}
             </div>
 
             <div className="grid gap-2">
@@ -139,19 +146,48 @@ export default function RegisterPage() {
                 type="text"
                 value={values.lastName}
                 onChange={(e) => onChange("lastName", e.target.value)}
+                aria-invalid={!!fieldErrors.lastName}
                 required
               />
+              {fieldErrors.lastName && <p className="text-xs text-destructive">{t(fieldErrors.lastName)}</p>}
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="password">{t("auth.password")}</Label>
-              <Input
+              <PasswordInput
                 id="password"
-                type="password"
                 value={values.password}
                 onChange={(e) => onChange("password", e.target.value)}
+                autoComplete="new-password"
+                aria-invalid={!!fieldErrors.password}
                 required
+                toggleLabelShow={t("auth.showPassword")}
+                toggleLabelHide={t("auth.hidePassword")}
               />
+              {fieldErrors.password ? (
+                <p className="text-xs text-destructive">{t(fieldErrors.password)}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  {t("auth.passwordHint")}
+                </p>
+              )}
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="confirmPassword">{t("auth.confirmPassword")}</Label>
+              <PasswordInput
+                id="confirmPassword"
+                value={values.confirmPassword}
+                onChange={(e) => onChange("confirmPassword", e.target.value)}
+                autoComplete="new-password"
+                aria-invalid={!!fieldErrors.confirmPassword}
+                required
+                toggleLabelShow={t("auth.showPassword")}
+                toggleLabelHide={t("auth.hidePassword")}
+              />
+              {fieldErrors.confirmPassword && (
+                <p className="text-xs text-destructive">{t(fieldErrors.confirmPassword)}</p>
+              )}
             </div>
 
             {formError && (

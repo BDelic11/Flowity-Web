@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,12 +14,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { StaffMember } from "@/types/staff";
+import { createStaffSchema, updateStaffSchema } from "@/schemas/staff";
+import { useLocale } from "@/contexts/locale-context";
 
 type FormValues = {
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
   phone: string;
   isActive: boolean;
 };
@@ -28,16 +29,19 @@ type FormErrors = Partial<Record<keyof FormValues, string>>;
 
 function validate(values: FormValues, isEdit: boolean): FormErrors {
   const errors: FormErrors = {};
-  if (!values.firstName.trim()) errors.firstName = "First name is required.";
-  if (!values.lastName.trim()) errors.lastName = "Last name is required.";
-  if (!isEdit) {
-    if (
-      !values.email.trim() ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)
-    )
-      errors.email = "Valid email is required.";
-    if (!values.password || values.password.length < 6)
-      errors.password = "Password must be at least 6 characters.";
+  const schema = isEdit ? updateStaffSchema : createStaffSchema;
+  const parsed = schema.safeParse({
+    firstName: values.firstName,
+    lastName: values.lastName,
+    email: values.email,
+    phone: values.phone || undefined,
+    isActive: values.isActive,
+  });
+  if (!parsed.success) {
+    for (const i of parsed.error.issues) {
+      const k = i.path[0] as keyof FormValues | undefined;
+      if (k && !errors[k]) errors[k] = i.message;
+    }
   }
   return errors;
 }
@@ -50,7 +54,6 @@ interface StaffDialogProps {
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
     phone?: string;
     isActive: boolean;
   }) => Promise<void>;
@@ -62,6 +65,7 @@ export function StaffDialog({
   staff,
   onSubmit,
 }: StaffDialogProps) {
+  const { t } = useLocale();
   const isEdit = !!staff;
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -70,25 +74,21 @@ export function StaffDialog({
     firstName: staff?.firstName ?? "",
     lastName: staff?.lastName ?? "",
     email: staff?.email ?? "",
-    password: "",
     phone: staff?.phone ?? "",
     isActive: staff?.isActive ?? true,
   });
 
-  // Reset when dialog opens for a different staff member
-  const [lastId, setLastId] = useState<string | undefined>();
-  if (staff?.id !== lastId) {
-    setLastId(staff?.id);
+  useEffect(() => {
+    if (!open) return;
     setValues({
       firstName: staff?.firstName ?? "",
       lastName: staff?.lastName ?? "",
       email: staff?.email ?? "",
-      password: "",
       phone: staff?.phone ?? "",
       isActive: staff?.isActive ?? true,
     });
     setErrors({});
-  }
+  }, [open, staff?.id]);
 
   function onChange(key: keyof FormValues, value: string | boolean) {
     setValues((v) => ({ ...v, [key]: value }));
@@ -109,7 +109,6 @@ export function StaffDialog({
         firstName: values.firstName.trim(),
         lastName: values.lastName.trim(),
         email: values.email.trim(),
-        password: values.password,
         phone: values.phone.trim() || undefined,
         isActive: values.isActive,
       });
@@ -126,19 +125,17 @@ export function StaffDialog({
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? "Edit Staff Member" : "Add Staff Member"}
+            {isEdit ? t("staff.editTitle") : t("staff.inviteTitle")}
           </DialogTitle>
           <DialogDescription>
-            {isEdit
-              ? "Update team member details."
-              : "Add a new worker to your organization."}
+            {isEdit ? t("staff.editDesc") : t("staff.inviteDesc")}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-2">
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">{t("staff.firstName")}</Label>
               <Input
                 id="firstName"
                 value={values.firstName}
@@ -147,11 +144,11 @@ export function StaffDialog({
                 disabled={loading}
               />
               {errors.firstName && (
-                <p className="text-sm text-destructive">{errors.firstName}</p>
+                <p className="text-sm text-destructive">{t(errors.firstName!)}</p>
               )}
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">{t("staff.lastName")}</Label>
               <Input
                 id="lastName"
                 value={values.lastName}
@@ -160,63 +157,53 @@ export function StaffDialog({
                 disabled={loading}
               />
               {errors.lastName && (
-                <p className="text-sm text-destructive">{errors.lastName}</p>
+                <p className="text-sm text-destructive">{t(errors.lastName!)}</p>
               )}
             </div>
           </div>
 
           {!isEdit && (
-            <>
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={values.email}
-                  onChange={(e) => onChange("email", e.target.value)}
-                  placeholder="jane@example.com"
-                  disabled={loading}
-                />
-                {errors.email && (
-                  <p className="text-sm text-destructive">{errors.email}</p>
-                )}
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="password">Initial Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={values.password}
-                  onChange={(e) => onChange("password", e.target.value)}
-                  placeholder="Min. 6 characters"
-                  disabled={loading}
-                />
-                {errors.password && (
-                  <p className="text-sm text-destructive">{errors.password}</p>
-                )}
-              </div>
-            </>
+            <div className="grid gap-2">
+              <Label htmlFor="email">{t("staff.email")}</Label>
+              <Input
+                id="email"
+                type="email"
+                value={values.email}
+                onChange={(e) => onChange("email", e.target.value)}
+                placeholder="jane@example.com"
+                disabled={loading}
+              />
+              {errors.email && (
+                <p className="text-sm text-destructive">{t(errors.email!)}</p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                {t("staff.inviteHint")}
+              </p>
+            </div>
           )}
 
           <div className="grid gap-2">
-            <Label htmlFor="phone">Phone (optional)</Label>
+            <Label htmlFor="phone">{t("staff.phoneOptional")}</Label>
             <Input
               id="phone"
               type="tel"
               value={values.phone}
               onChange={(e) => onChange("phone", e.target.value)}
               placeholder="+385 91 123 4567"
+              aria-invalid={!!errors.phone}
               disabled={loading}
             />
+            {errors.phone && (
+              <p className="text-sm text-destructive">{t(errors.phone!)}</p>
+            )}
           </div>
 
           {isEdit && (
             <div className="flex items-center justify-between rounded-lg border p-4">
               <div>
-                <Label htmlFor="isActive">Active</Label>
+                <Label htmlFor="isActive">{t("staff.activeLabel")}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Can accept appointments
+                  {t("staff.activeDesc")}
                 </p>
               </div>
               <Switch
@@ -235,10 +222,14 @@ export function StaffDialog({
               onClick={() => onOpenChange(false)}
               disabled={loading}
             >
-              Cancel
+              {t("staff.cancel")}
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Saving..." : isEdit ? "Update" : "Add Member"}
+              {loading
+                ? t("staff.saving")
+                : isEdit
+                ? t("staff.update")
+                : t("staff.sendInvite")}
             </Button>
           </DialogFooter>
         </form>

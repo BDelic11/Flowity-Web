@@ -10,6 +10,9 @@ export type AuthUser = {
   role: string;
   organizationId: string | null;
   tenantName: string;
+  isEmailVerified: boolean;
+  isBookable: boolean;
+  bookableServiceIds: string[];
 } | null;
 
 type AuthContextValue = {

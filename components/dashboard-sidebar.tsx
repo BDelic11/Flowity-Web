@@ -2,7 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, Users, Settings, Home, Tag, Menu, MessageSquare } from "lucide-react";
+import {
+  Calendar,
+  Users,
+  Home,
+  Tag,
+  Menu,
+  MessageSquare,
+  Contact,
+  Download,
+  Package,
+  Building2,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
 import { useLocale } from "@/contexts/locale-context";
@@ -31,8 +42,6 @@ export function DashboardSidebar() {
       icon: Tag,
       roles: [Roles.SUPER_ADMIN, Roles.ADMIN],
     },
-    // Settings visible to all roles — Workers see profile-only, Admins see full org settings
-    { key: "nav.settings", href: "/dashboard/settings", icon: Settings },
     {
       key: "nav.staff",
       href: "/dashboard/staff",
@@ -43,6 +52,30 @@ export function DashboardSidebar() {
       key: "nav.whatsapp",
       href: "/dashboard/whatsapp",
       icon: MessageSquare,
+      roles: [Roles.SUPER_ADMIN, Roles.ADMIN],
+    },
+    {
+      key: "nav.clients",
+      href: "/dashboard/clients",
+      icon: Contact,
+      roles: [Roles.SUPER_ADMIN, Roles.ADMIN],
+    },
+    {
+      key: "nav.products",
+      href: "/dashboard/products",
+      icon: Package,
+      roles: [Roles.SUPER_ADMIN, Roles.ADMIN],
+    },
+    {
+      key: "nav.export",
+      href: "/dashboard/export",
+      icon: Download,
+      roles: [Roles.SUPER_ADMIN, Roles.ADMIN],
+    },
+    {
+      key: "nav.organizations",
+      href: "/select-organization",
+      icon: Building2,
       roles: [Roles.SUPER_ADMIN, Roles.ADMIN],
     },
   ];
@@ -111,17 +144,18 @@ export function DashboardSidebar() {
         </div>
       </header>
 
-      {/* DESKTOP: original left rail */}
-      <aside className="hidden md:block fixed left-0 top-0 z-40 h-screen w-16 border-r bg-card">
-        <div className="flex h-full flex-col items-center py-4">
+      {/* DESKTOP: hover-expand left rail */}
+      <aside className="group hidden md:flex fixed left-0 top-0 z-40 h-screen w-16 hover:w-56 transition-all duration-200 ease-in-out border-r bg-card flex-col overflow-hidden">
+        <div className="flex h-full flex-col py-4">
+          {/* Logo */}
           <Link
             href="/"
-            className="mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-primary"
+            className="mb-8 mx-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary"
           >
             <span className="text-lg font-bold text-primary-foreground">F</span>
           </Link>
 
-          <nav className="flex flex-1 flex-col gap-2">
+          <nav className="flex flex-1 flex-col gap-1 px-2">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
@@ -130,14 +164,16 @@ export function DashboardSidebar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex h-12 w-12 items-center justify-center rounded-lg transition-colors",
+                    "flex h-10 items-center gap-3 rounded-lg px-3 transition-colors",
                     isActive
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
-                  title={t(item.key)}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-5 w-5 shrink-0" />
+                  <span className="truncate text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap">
+                    {t(item.key)}
+                  </span>
                 </Link>
               );
             })}

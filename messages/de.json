@@ -8,7 +8,13 @@
     "add": "Hinzufügen",
     "email": "E-Mail",
     "loading": "Laden...",
-    "free": "Kostenlos"
+    "free": "Kostenlos",
+    "confirmDelete": {
+      "title": "Löschen?",
+      "titleNamed": "\"{{name}}\" löschen?",
+      "description": "Diese Aktion kann nicht rückgängig gemacht werden.",
+      "confirm": "Löschen"
+    }
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -18,10 +24,16 @@
     "staff": "Personal",
     "openMenu": "Menü öffnen",
     "menu": "Menü",
-    "whatsapp": "WhatsApp"
+    "whatsapp": "WhatsApp",
+    "clients": "Kunden",
+    "profile": "Profil",
+    "export": "Export",
+    "products": "Materialien",
+    "organizations": "Salons"
   },
   "header": {
     "profile": "Profil",
+    "settings": "Einstellungen",
     "signOut": "Abmelden",
     "signingOut": "Abmeldung..."
   },
@@ -42,7 +54,20 @@
     "todaysRevenue": "Heutiger Umsatz",
     "fromConfirmedBookings": "aus bestätigten Buchungen",
     "thisWeek": "Diese Woche",
-    "appointmentsBooked": "gebuchte Termine"
+    "appointmentsBooked": "gebuchte Termine",
+    "todaysSchedule": "Heutiger Zeitplan",
+    "remainingToday": "Noch {{count}} heute",
+    "upcomingSchedule": "Kommende Termine",
+    "nextCount": "Nächste {{count}}",
+    "upNext": "Als nächstes",
+    "inProgress": "Läuft gerade",
+    "emptyScheduleTitle": "Keine Termine mehr heute",
+    "emptyScheduleDesc": "Genießen Sie die Pause — die nächste Buchung erscheint hier.",
+    "emptyUpcomingTitle": "Keine kommenden Termine",
+    "emptyUpcomingDesc": "Sobald Kunden buchen, erscheint es hier.",
+    "tomorrow": "Morgen",
+    "noStaff": "Nicht zugewiesen",
+    "with": "bei"
   },
   "calendar": {
     "noOrganization": "Keine Organisation gefunden. Bitte erstellen Sie zuerst eine Organisation.",
@@ -78,7 +103,10 @@
       "description": "Legen Sie die Öffnungszeiten Ihres Salons fest",
       "to": "bis",
       "saved": "Öffnungszeiten gespeichert",
-      "failed": "Fehler beim Speichern der Öffnungszeiten"
+      "failed": "Fehler beim Speichern der Öffnungszeiten",
+      "syncWeekdays": "Gleiche Zeiten Mo–Fr",
+      "syncWeekdaysDesc": "Di–Fr übernehmen Montag. Ausschalten, um jeden Tag einzeln zu bearbeiten.",
+      "synced": "Synchron"
     },
     "booking": {
       "title": "Buchungseinstellungen",
@@ -132,7 +160,9 @@
     "continueWithGoogle": "Mit Google fortfahren",
     "googleFailed": "Google-Anmeldung fehlgeschlagen. Bitte erneut versuchen.",
     "or": "oder",
-    "signingIn": "Anmelden..."
+    "signingIn": "Anmelden...",
+    "passwordHint": "Min. 8 Zeichen, mit Groß-/Kleinbuchstaben und Ziffer",
+    "confirmPassword": "Passwort bestätigen"
   },
   "organization": {
     "create": "Organisation erstellen",
@@ -180,7 +210,33 @@
     "deleteFailed": "Löschen fehlgeschlagen",
     "updated": "Teammitglied aktualisiert",
     "added": "Teammitglied hinzugefügt",
-    "saveFailed": "Fehler beim Speichern des Teammitglieds"
+    "saveFailed": "Fehler beim Speichern des Teammitglieds",
+    "emptyTitle": "Noch kein Personal",
+    "emptyDesc": "Fügen Sie Ihr erstes Teammitglied hinzu, um Termine zuzuweisen.",
+    "inviteTitle": "Mitarbeiter einladen",
+    "editTitle": "Mitarbeiter bearbeiten",
+    "inviteDesc": "Wir senden eine E-Mail mit Link zur Bestätigung und Passwortvergabe.",
+    "editDesc": "Daten des Teammitglieds aktualisieren.",
+    "inviteHint": "Eine Einladung wird an diese Adresse gesendet. Das Konto bleibt inaktiv, bis bestätigt und ein Passwort gesetzt wurde.",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "phoneOptional": "Telefon (optional)",
+    "activeLabel": "Aktiv",
+    "activeDesc": "Kann Termine annehmen",
+    "cancel": "Abbrechen",
+    "saving": "Speichern...",
+    "update": "Aktualisieren",
+    "sendInvite": "Einladung senden",
+    "invited": "Einladung gesendet",
+    "pending": "Einladung ausstehend"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "empty": "Keine neuen Benachrichtigungen",
+    "lowStock": "Niedriger Bestand",
+    "outOfStock": "Nicht vorrätig",
+    "newBooking": "Neue Buchung"
   },
   "appointments": {
     "editTitle": "Termin bearbeiten",
@@ -217,5 +273,223 @@
     "start": "Beginn",
     "end": "Ende",
     "staff": "Personal"
+  },
+  "validation": {
+    "required": "Pflichtfeld",
+    "tooShort": "Zu kurz",
+    "tooLong": "Zu lang",
+    "invalid": "Ungültiger Wert",
+    "email": {
+      "required": "E-Mail ist erforderlich",
+      "invalid": "Bitte eine gültige E-Mail eingeben",
+      "tooLong": "E-Mail ist zu lang"
+    },
+    "password": {
+      "required": "Passwort ist erforderlich",
+      "min8": "Passwort muss mindestens 8 Zeichen haben",
+      "max72": "Passwort darf höchstens 72 Zeichen haben",
+      "uppercase": "Passwort muss einen Großbuchstaben enthalten",
+      "lowercase": "Passwort muss einen Kleinbuchstaben enthalten",
+      "digit": "Passwort muss eine Ziffer enthalten",
+      "confirm": "Bitte bestätigen Sie das Passwort",
+      "mismatch": "Passwörter stimmen nicht überein"
+    },
+    "name": {
+      "required": "Name ist erforderlich",
+      "tooShort": "Name ist zu kurz",
+      "tooLong": "Name ist zu lang",
+      "invalid": "Nur Buchstaben, Bindestriche und Apostrophe erlaubt"
+    },
+    "phone": {
+      "invalid": "Gültige Telefonnummer eingeben (5–32 Zeichen)"
+    },
+    "color": {
+      "invalid": "Farbe muss im Format #RRGGBB sein"
+    },
+    "url": {
+      "invalid": "Gültige URL eingeben",
+      "scheme": "Nur http(s)-URLs sind erlaubt",
+      "tooLong": "URL ist zu lang"
+    },
+    "uuid": {
+      "invalid": "Ungültige ID"
+    },
+    "address": {
+      "required": "Adresse ist erforderlich",
+      "tooLong": "Adresse ist zu lang"
+    },
+    "industry": {
+      "required": "Branche ist erforderlich"
+    },
+    "tz": {
+      "required": "Zeitzone ist erforderlich"
+    },
+    "salonName": {
+      "required": "Salonname ist erforderlich"
+    },
+    "duration": {
+      "required": "Dauer ist erforderlich",
+      "tooShort": "Dauer muss mindestens 5 Minuten betragen",
+      "tooLong": "Dauer darf höchstens 8 Stunden sein",
+      "notInt": "Dauer muss eine ganze Zahl sein"
+    },
+    "price": {
+      "required": "Preis ist erforderlich",
+      "negative": "Preis darf nicht negativ sein",
+      "tooHigh": "Preis ist zu hoch",
+      "range": "Höchstpreis muss ≥ Mindestpreis sein"
+    },
+    "threshold": {
+      "required": "Lagerbestandsschwelle ist erforderlich",
+      "negative": "Schwelle darf nicht negativ sein",
+      "tooHigh": "Schwelle ist zu hoch"
+    },
+    "stock": {
+      "required": "Bestand ist erforderlich",
+      "negative": "Bestand darf nicht negativ sein",
+      "tooHigh": "Bestand ist zu hoch"
+    },
+    "unit": {
+      "invalid": "Gültige Einheit wählen"
+    },
+    "quantity": {
+      "required": "Menge ist erforderlich",
+      "gtZero": "Menge muss größer als 0 sein",
+      "tooHigh": "Menge ist zu hoch"
+    },
+    "delta": {
+      "required": "Änderung ist erforderlich",
+      "zero": "Änderung darf nicht 0 sein",
+      "outOfRange": "Änderung außerhalb des zulässigen Bereichs"
+    },
+    "note": {
+      "tooLong": "Notiz ist zu lang"
+    },
+    "description": {
+      "tooLong": "Beschreibung ist zu lang"
+    },
+    "category": {
+      "tooLong": "Kategorie ist zu lang"
+    },
+    "notes": {
+      "tooLong": "Notizen sind zu lang"
+    },
+    "staff": {
+      "required": "Mindestens einen Mitarbeiter auswählen"
+    },
+    "booking": {
+      "endBeforeStart": "Ende muss nach dem Anfang liegen",
+      "tooShort": "Termin muss mindestens 5 Minuten dauern",
+      "tooLong": "Termin darf höchstens 8 Stunden dauern",
+      "past": "Termin kann nicht in der Vergangenheit liegen",
+      "clientNameTooShort": "Kundenname ist zu kurz",
+      "clientNameTooLong": "Kundenname ist zu lang"
+    },
+    "buffer": {
+      "range": "Pause muss zwischen 0 und 120 Minuten liegen"
+    },
+    "businessHours": {
+      "length": "Alle 7 Tage sind erforderlich",
+      "dupDays": "Tage müssen eindeutig sein",
+      "openClose": "Öffnungs- und Schließzeiten sind erforderlich",
+      "closeBeforeOpen": "Schließzeit muss nach Öffnungszeit liegen",
+      "daysOrder": "Tage müssen in der Reihenfolge Montag..Sonntag stehen",
+      "invalidDay": "Unbekannter Tagesname"
+    },
+    "bookingSettings": {
+      "bufferRange": "Pause zwischen Terminen muss 0–30 Min sein",
+      "advanceRange": "Vorausbuchung muss 7–120 Tage sein",
+      "leadRange": "Vorlaufzeit muss 0–1440 Min sein"
+    },
+    "time": {
+      "invalid": "Uhrzeit muss im Format HH:mm sein"
+    },
+    "date": {
+      "invalid": "Ungültiges Datum"
+    },
+    "whatsapp": {
+      "required": "Telefonnummer ist erforderlich",
+      "tooLong": "Telefonnummer ist zu lang",
+      "format": "E.164-Format verwenden (z. B. +14155238886)"
+    }
+  },
+  "onboarding": {
+    "skip": "Überspringen",
+    "next": "Weiter",
+    "back": "Zurück",
+    "done": "Los geht's",
+    "welcome": {
+      "title": "Willkommen bei Flowity",
+      "desc": "Ihr digitaler Salon-Assistent. Kurze Tour — unter einer Minute."
+    },
+    "calendar": {
+      "title": "Alle Termine an einem Ort",
+      "desc": "Sehen Sie den Zeitplan Ihres gesamten Teams in Echtzeit. Termine in wenigen Klicks hinzufügen, bearbeiten oder absagen — keine Doppelbuchungen, keine verpassten Termine."
+    },
+    "whatsapp": {
+      "title": "WhatsApp-KI-Assistent 24/7",
+      "desc": "Kunden buchen direkt über WhatsApp — die KI chattet mit ihnen, findet freie Termine und trägt die Buchung automatisch in Ihren Kalender ein."
+    },
+    "services": {
+      "title": "Definieren Sie Dienste und Team",
+      "desc": "Fügen Sie Dienstleistungen mit Preisen, Dauer und Farben hinzu. Wählen Sie, welche Mitarbeiter welche Dienste durchführen — die KI schlägt Kunden die richtigen Kombinationen vor."
+    },
+    "products": {
+      "title": "Bestand automatisch verfolgen",
+      "desc": "Farben, Shampoos, Werkzeuge — sehen Sie, was übrig ist, und erhalten Sie Warnungen bei niedrigem Bestand. Jeder Dienst verfolgt seinen eigenen Verbrauch."
+    },
+    "ready": {
+      "title": "Sie sind bereit!",
+      "desc": "Beginnen Sie mit der Einrichtung Ihres Salons. Alles ist konfiguriert — besuchen Sie jederzeit die Einstellungen zur Feinabstimmung."
+    }
+  },
+  "verifyEmail": {
+    "checkInbox": "Posteingang prüfen",
+    "sentTo": "Wir haben einen Bestätigungslink gesendet an",
+    "clickLink": "Öffnen Sie die E-Mail und klicken Sie auf den Button, um Ihre Adresse zu bestätigen. Nicht erhalten? Prüfen Sie den Spam-Ordner.",
+    "resend": "Link erneut senden",
+    "resent": "Link gesendet",
+    "resendOk": "Ein neuer Bestätigungslink ist unterwegs.",
+    "resendFail": "Senden fehlgeschlagen. Bitte später erneut versuchen.",
+    "continueAnyway": "Ohne Bestätigung fortfahren",
+    "checking": "E-Mail wird bestätigt...",
+    "checkingDesc": "Einen Moment — Ihr Link wird überprüft.",
+    "success": "E-Mail bestätigt!",
+    "successDesc": "Ihr Konto ist jetzt vollständig aktiv.",
+    "error": "Link ungültig",
+    "errorDesc": "Dieser Link ist abgelaufen oder bereits verwendet. Fordern Sie einen neuen an.",
+    "requestNew": "Neuen Link anfordern",
+    "continue": "Zum Dashboard",
+    "banner": "Bestätigen Sie Ihre E-Mail, um alle Funktionen freizuschalten.",
+    "bannerCta": "Erneut senden"
+  },
+  "profile": {
+    "role": "Rolle",
+    "organization": "Organisation",
+    "roleAdmin": "Admin",
+    "roleWorker": "Mitarbeiter",
+    "roleAdminWorker": "Admin & Mitarbeiter",
+    "bookable": {
+      "title": "Ich bediene auch Kunden",
+      "description": "Aktivieren Sie dies, damit Ihr Name in der Buchung neben dem Team erscheint.",
+      "toggleLabel": "Buchbar umschalten",
+      "servicesTitle": "Meine Dienstleistungen",
+      "servicesDesc": "Mindestens eine wählen — Kunden können Sie nur für diese buchen.",
+      "noServices": "Fügen Sie zuerst Dienstleistungen hinzu und kehren Sie dann hierher zurück.",
+      "pickAtLeastOne": "Wählen Sie mindestens eine Dienstleistung.",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert.",
+      "failed": "Speichern fehlgeschlagen. Bitte erneut versuchen."
+    }
+  },
+  "setPassword": {
+    "title": "Passwort festlegen",
+    "description": "Wählen Sie ein Passwort, um Ihr Konto zu aktivieren. Sie werden direkt angemeldet.",
+    "submit": "Konto aktivieren",
+    "submitting": "Aktiviere...",
+    "failed": "Aktivierung fehlgeschlagen. Bitte neue Einladung anfordern.",
+    "invalidToken": "Dieser Einladungslink ist ungültig oder abgelaufen.",
+    "invalidTitle": "Ungültige Einladung",
+    "invalidDesc": "Bitten Sie Ihren Admin um eine neue Einladung."
   }
 }

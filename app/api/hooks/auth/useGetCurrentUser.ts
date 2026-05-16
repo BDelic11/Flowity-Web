@@ -12,6 +12,9 @@ type CurrentUserResponse = {
   role: string;
   phone?: string | null;
   isActive: boolean;
+  isEmailVerified: boolean;
+  isBookable: boolean;
+  bookableServiceIds: string[];
 };
 
 const getCurrentUser = async (): Promise<AuthUser | null> => {
@@ -30,6 +33,9 @@ const getCurrentUser = async (): Promise<AuthUser | null> => {
     role: data.role,
     organizationId: data.organizationId ?? null,
     tenantName: "",
+    isEmailVerified: data.isEmailVerified,
+    isBookable: data.isBookable ?? false,
+    bookableServiceIds: data.bookableServiceIds ?? [],
   };
 };
 

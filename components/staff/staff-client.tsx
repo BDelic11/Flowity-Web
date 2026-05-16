@@ -16,10 +16,11 @@ import { StaffDialog } from "@/components/staff/staff-dialog";
 import { useCreateStaff } from "@/app/api/hooks/staff/useCreateStaff";
 import { useUpdateStaff } from "@/app/api/hooks/staff/useUpdateStaff";
 import { useDeleteStaff } from "@/app/api/hooks/staff/useDeleteStaff";
-import { useConfirm } from "@/hooks/useConfirm";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
 import { toast } from "sonner";
 import { StaffMember } from "@/types/staff";
 import PageLayout from "../ui/page-layout";
+import { EmptyState, StaffIllustration } from "@/components/ui/empty-state";
 import { getApiErrorMessage } from "@/app/api/hooks/auth/useLogin";
 import { useLocale } from "@/contexts/locale-context";
 
@@ -34,7 +35,7 @@ export default function StaffClient({
 }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selected, setSelected] = useState<StaffMember | undefined>();
-  const { confirm, ConfirmPortal } = useConfirm();
+  const { askDelete, ConfirmPortal } = useDeleteConfirm();
   const { t } = useLocale();
 
   const { mutateAsync: createStaff } = useCreateStaff();
@@ -52,11 +53,10 @@ export default function StaffClient({
   }
 
   async function handleDelete(id: string, name: string) {
-    const ok = await confirm({
-      title: t("staff.removeConfirmTitle", { name }),
+    const ok = await askDelete({
+      name,
       description: t("staff.removeConfirmDesc"),
       confirmLabel: t("staff.remove"),
-      confirmVariant: "destructive",
     });
     if (!ok) return;
     try {
@@ -71,7 +71,6 @@ export default function StaffClient({
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
     phone?: string;
     isActive: boolean;
   }) {
@@ -91,10 +90,9 @@ export default function StaffClient({
           firstName: payload.firstName,
           lastName: payload.lastName,
           email: payload.email,
-          password: payload.password,
           phone: payload.phone || undefined,
         });
-        toast.success(t("staff.added"));
+        toast.success(t("staff.invited"));
       }
       setDialogOpen(false);
     } catch (error) {
@@ -184,19 +182,19 @@ export default function StaffClient({
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="text-6xl mb-4">👥</div>
-          <h3 className="text-2xl font-semibold mb-2">No staff yet</h3>
-          <p className="text-muted-foreground mb-6 max-w-md">
-            Add your first team member to get started.
-          </p>
-          {isAdmin && (
-            <Button onClick={handleAddNew} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Add Staff Member
-            </Button>
-          )}
-        </div>
+        <EmptyState
+          illustration={<StaffIllustration />}
+          title={t("staff.emptyTitle")}
+          description={t("staff.emptyDesc")}
+          action={
+            isAdmin ? (
+              <Button onClick={handleAddNew} className="gap-2">
+                <Plus className="h-4 w-4" />
+                {t("staff.addStaff")}
+              </Button>
+            ) : null
+          }
+        />
       )}
 
       {ConfirmPortal}

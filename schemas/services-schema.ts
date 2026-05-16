@@ -1,19 +1,41 @@
-import z from "zod";
+import { z } from "zod";
+import { hexColorField, uuidField } from "./_shared";
 
-const ServiceSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters."),
-  description: z.string().optional(),
-  duration: z
-    .number()
-    .min(15, "Duration must be at least 15 minutes.")
-    .max(480, "Duration must be less than 8 hours."),
-  price: z.number().min(0, "Price cannot be negative."),
-  color: z
-    .string()
-    .regex(/^#([0-9A-Fa-f]{6})$/, "Color must be a valid hex code."),
-  assignedStaffIds: z
-    .array(z.string())
-    .min(1, "At least one staff member is required")
-    .optional(),
-});
+const ServiceSchema = z
+  .object({
+    name: z
+      .string()
+      .trim()
+      .min(2, "validation.name.tooShort")
+      .max(120, "validation.name.tooLong"),
+    description: z.string().max(2000, "validation.description.tooLong").optional(),
+    duration: z
+      .number({ invalid_type_error: "validation.duration.required" })
+      .int("validation.duration.notInt")
+      .min(5, "validation.duration.tooShort")
+      .max(480, "validation.duration.tooLong"),
+    bufferBefore: z.number().int().min(0).max(120, "validation.buffer.range").optional(),
+    bufferAfter: z.number().int().min(0).max(120, "validation.buffer.range").optional(),
+    priceMin: z
+      .number()
+      .min(0, "validation.price.negative")
+      .max(1_000_000, "validation.price.tooHigh")
+      .optional(),
+    priceMax: z
+      .number()
+      .min(0, "validation.price.negative")
+      .max(1_000_000, "validation.price.tooHigh")
+      .optional(),
+    color: hexColorField,
+    assignedStaffIds: z.array(uuidField).min(1, "validation.staff.required"),
+  })
+  .refine(
+    (v) =>
+      v.priceMin === undefined ||
+      v.priceMax === undefined ||
+      v.priceMax >= v.priceMin,
+    { path: ["priceMax"], message: "validation.price.range" }
+  );
+
 export default ServiceSchema;
+export type ServiceInput = z.infer<typeof ServiceSchema>;

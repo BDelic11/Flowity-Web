@@ -79,7 +79,7 @@ export default function WhatsappPage() {
         </p>
       </div>
 
-      <div className="grid gap-6 max-w-2xl">
+      <div className="grid gap-6 lg:grid-cols-2">
 
         {/* Status card */}
         <div className="rounded-xl border bg-card p-5">

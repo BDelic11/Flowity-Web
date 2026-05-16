@@ -12,4 +12,5 @@ export type SalonMetrics = {
   activeStaffCount: number;
   todaysRevenue: number;
   nextAppointment: NextAppointment | null;
+  upcomingAppointments: NextAppointment[];
 };

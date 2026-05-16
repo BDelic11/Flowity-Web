@@ -31,9 +31,9 @@ function isoToLocal(iso: string): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-// Convert datetime-local value back to ISO UTC string
+// Convert datetime-local input value to bare local ISO for the backend (no UTC conversion).
 function localToISO(local: string): string {
-  return new Date(local).toISOString();
+  return local.length === 16 ? local + ":00" : local;
 }
 
 interface AppointmentDetailsDialogProps {
