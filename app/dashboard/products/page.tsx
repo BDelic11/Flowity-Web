@@ -88,7 +88,7 @@ export default function ProductsPage() {
     <PageLayout>
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Materijali</h2>
+          <h2 className="text-3xl font-bold tracking-tight pb-2">Materijali</h2>
           <p className="text-muted-foreground">
             Potrošni materijali — boje, šamponi, sredstva. Pratite stanje i
             nabavu.
@@ -96,7 +96,8 @@ export default function ProductsPage() {
         </div>
         {isAdmin && (
           <Button onClick={openCreate} className="gap-2">
-            <Plus className="h-4 w-4" /> Novi proizvod
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">Novi proizvod</span>
           </Button>
         )}
       </div>

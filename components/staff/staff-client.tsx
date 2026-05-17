@@ -104,7 +104,9 @@ export default function StaffClient({
     <PageLayout>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">{t("staff.title")}</h2>
+          <h2 className="text-3xl font-bold tracking-tight pb-2">
+            {t("staff.title")}
+          </h2>
           <p className="text-muted-foreground">{t("staff.description")}</p>
         </div>
         {isAdmin && (
@@ -138,7 +140,9 @@ export default function StaffClient({
                           {t("services.active")}
                         </Badge>
                       ) : (
-                        <Badge variant="secondary">{t("services.inactive")}</Badge>
+                        <Badge variant="secondary">
+                          {t("services.inactive")}
+                        </Badge>
                       )}
                     </CardDescription>
                   </div>

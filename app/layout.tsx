@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} font-sans antialiased`}>
+      <body className={`${inter.className} font-sans antialiased bg-accent/20`}>
         <Providers>{children}</Providers>
         <Toaster />
         <SpeedInsights />

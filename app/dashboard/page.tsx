@@ -31,8 +31,10 @@ export default function DashboardPage() {
 
   return (
     <PageLayout>
-      <div className="mb-6">
-        <h2 className="text-3xl font-bold tracking-tight">{t("dashboard.title")}</h2>
+      <div className="mb-6 ">
+        <h2 className="text-3xl font-bold tracking-tight pb-2">
+          {t("dashboard.title")}
+        </h2>
         <p className="text-muted-foreground">
           {t("dashboard.welcome", { name: user.name })}
         </p>

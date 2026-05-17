@@ -10,7 +10,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Clock, Edit, Trash2, EuroIcon, Users, Package } from "lucide-react";
+import {
+  Plus,
+  Clock,
+  Edit,
+  Trash2,
+  EuroIcon,
+  Users,
+  Package,
+} from "lucide-react";
 import { ServiceDialog } from "@/components/services/service-dialog";
 import { ServiceProductsDialog } from "@/components/services/service-products-dialog";
 import { useCreateService } from "@/app/api/hooks/services/useCreateService";
@@ -39,7 +47,9 @@ export default function ServicesClient({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selected, setSelected] = useState<ServiceData | undefined>();
   const [productsDialogOpen, setProductsDialogOpen] = useState(false);
-  const [productsService, setProductsService] = useState<ServiceData | undefined>();
+  const [productsService, setProductsService] = useState<
+    ServiceData | undefined
+  >();
   const { askDelete, ConfirmPortal } = useDeleteConfirm();
   const { t } = useLocale();
 
@@ -121,7 +131,7 @@ export default function ServicesClient({
       <div>
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight">
+            <h2 className="text-3xl font-bold tracking-tight pb-2">
               {t("services.title")}
             </h2>
             <p className="text-muted-foreground">{t("services.description")}</p>
