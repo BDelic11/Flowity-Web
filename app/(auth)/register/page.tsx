@@ -23,6 +23,8 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/auth-context";
 import Loading from "@/components/ui/loading";
 import { useLocale } from "@/contexts/locale-context";
+import Image from "next/image";
+import logoIconBig from "@/public/logos/large-logo.png";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -34,11 +36,14 @@ export default function RegisterPage() {
     password: "",
     confirmPassword: "",
   });
-  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof RegisterValues, string>>>({});
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<keyof RegisterValues, string>>
+  >({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const { mutateAsync: registerUser } = useRegister();
-  const { mutateAsync: googleLogin, isPending: isGooglePending } = useGoogleAuth();
+  const { mutateAsync: googleLogin, isPending: isGooglePending } =
+    useGoogleAuth();
 
   async function handleGoogleSuccess(accessToken: string) {
     justRegistered.current = true;
@@ -103,9 +108,16 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-primary/10">
       <Card className="w-full max-w-md">
         <CardHeader>
+          <Image
+            src={logoIconBig}
+            alt={"Logo icon small flowity"}
+            width={120}
+            height={120}
+            className="h-20 w-60 rounded-md object-cover"
+          />
           <CardTitle>{t("auth.register")}</CardTitle>
           <CardDescription>{t("auth.registerDesc")}</CardDescription>
         </CardHeader>
@@ -123,7 +135,11 @@ export default function RegisterPage() {
                 aria-invalid={!!fieldErrors.email}
                 required
               />
-              {fieldErrors.email && <p className="text-xs text-destructive">{t(fieldErrors.email)}</p>}
+              {fieldErrors.email && (
+                <p className="text-xs text-destructive">
+                  {t(fieldErrors.email)}
+                </p>
+              )}
             </div>
 
             <div className="grid gap-2">
@@ -136,7 +152,11 @@ export default function RegisterPage() {
                 aria-invalid={!!fieldErrors.firstName}
                 required
               />
-              {fieldErrors.firstName && <p className="text-xs text-destructive">{t(fieldErrors.firstName)}</p>}
+              {fieldErrors.firstName && (
+                <p className="text-xs text-destructive">
+                  {t(fieldErrors.firstName)}
+                </p>
+              )}
             </div>
 
             <div className="grid gap-2">
@@ -149,7 +169,11 @@ export default function RegisterPage() {
                 aria-invalid={!!fieldErrors.lastName}
                 required
               />
-              {fieldErrors.lastName && <p className="text-xs text-destructive">{t(fieldErrors.lastName)}</p>}
+              {fieldErrors.lastName && (
+                <p className="text-xs text-destructive">
+                  {t(fieldErrors.lastName)}
+                </p>
+              )}
             </div>
 
             <div className="grid gap-2">
@@ -165,7 +189,9 @@ export default function RegisterPage() {
                 toggleLabelHide={t("auth.hidePassword")}
               />
               {fieldErrors.password ? (
-                <p className="text-xs text-destructive">{t(fieldErrors.password)}</p>
+                <p className="text-xs text-destructive">
+                  {t(fieldErrors.password)}
+                </p>
               ) : (
                 <p className="text-xs text-muted-foreground">
                   {t("auth.passwordHint")}
@@ -174,7 +200,9 @@ export default function RegisterPage() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="confirmPassword">{t("auth.confirmPassword")}</Label>
+              <Label htmlFor="confirmPassword">
+                {t("auth.confirmPassword")}
+              </Label>
               <PasswordInput
                 id="confirmPassword"
                 value={values.confirmPassword}
@@ -186,7 +214,9 @@ export default function RegisterPage() {
                 toggleLabelHide={t("auth.hidePassword")}
               />
               {fieldErrors.confirmPassword && (
-                <p className="text-xs text-destructive">{t(fieldErrors.confirmPassword)}</p>
+                <p className="text-xs text-destructive">
+                  {t(fieldErrors.confirmPassword)}
+                </p>
               )}
             </div>
 
@@ -201,7 +231,9 @@ export default function RegisterPage() {
 
           <div className="my-4 flex items-center gap-3">
             <div className="h-px flex-1 bg-border" />
-            <span className="text-xs text-muted-foreground">{t("auth.or")}</span>
+            <span className="text-xs text-muted-foreground">
+              {t("auth.or")}
+            </span>
             <div className="h-px flex-1 bg-border" />
           </div>
 

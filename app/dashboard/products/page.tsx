@@ -1,7 +1,16 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Plus, Pencil, Trash2, PackagePlus, Search, Package, AlertTriangle } from "lucide-react";
+import Image from "next/image";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  PackagePlus,
+  Search,
+  Package,
+  AlertTriangle,
+} from "lucide-react";
 import { toast } from "sonner";
 import PageLayout from "@/components/ui/page-layout";
 import Loading from "@/components/ui/loading";
@@ -22,7 +31,8 @@ import { Roles } from "@/constants/roles";
 
 export default function ProductsPage() {
   const { user, organizationId } = useAuth();
-  const isAdmin = user?.role === Roles.ADMIN || user?.role === Roles.SUPER_ADMIN;
+  const isAdmin =
+    user?.role === Roles.ADMIN || user?.role === Roles.SUPER_ADMIN;
 
   const { data: products, isLoading } = useGetProducts(organizationId);
   const { mutateAsync: deleteProduct } = useDeleteProduct();
@@ -41,13 +51,13 @@ export default function ProductsPage() {
     return products.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
-        p.category?.toLowerCase().includes(q),
+        p.category?.toLowerCase().includes(q)
     );
   }, [products, search]);
 
   const lowStockCount = useMemo(
     () => (products ?? []).filter((p) => getStockLevel(p) === "red").length,
-    [products],
+    [products]
   );
 
   if (isLoading) return <Loading />;
@@ -80,7 +90,8 @@ export default function ProductsPage() {
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Materijali</h2>
           <p className="text-muted-foreground">
-            Potrošni materijali — boje, šamponi, sredstva. Pratite stanje i nabavu.
+            Potrošni materijali — boje, šamponi, sredstva. Pratite stanje i
+            nabavu.
           </p>
         </div>
         {isAdmin && (
@@ -95,7 +106,9 @@ export default function ProductsPage() {
         <div className="mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm">
           <AlertTriangle className="h-4 w-4 shrink-0 text-red-600" />
           <span className="text-red-800">
-            <strong>{lowStockCount}</strong> {lowStockCount === 1 ? "proizvod ima" : "proizvoda imaju"} nisku zalihu — vrijeme za nabavu.
+            <strong>{lowStockCount}</strong>{" "}
+            {lowStockCount === 1 ? "proizvod ima" : "proizvoda imaju"} nisku
+            zalihu — vrijeme za nabavu.
           </span>
         </div>
       )}
@@ -134,9 +147,15 @@ export default function ProductsPage() {
             <thead className="border-b bg-muted/40 text-left text-xs uppercase text-muted-foreground">
               <tr>
                 <th className="px-4 py-3 font-medium">Proizvod</th>
-                <th className="px-4 py-3 font-medium hidden md:table-cell">Kategorija</th>
+                <th className="px-4 py-3 font-medium hidden md:table-cell">
+                  Kategorija
+                </th>
                 <th className="px-4 py-3 font-medium">Stanje</th>
-                {isAdmin && <th className="px-4 py-3 font-medium hidden lg:table-cell">Cijena / jed.</th>}
+                {isAdmin && (
+                  <th className="px-4 py-3 font-medium hidden lg:table-cell">
+                    Cijena / jed.
+                  </th>
+                )}
                 <th className="px-4 py-3 text-right font-medium">Akcije</th>
               </tr>
             </thead>
@@ -146,9 +165,15 @@ export default function ProductsPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {p.imageUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={p.imageUrl} alt={p.name} className="h-10 w-10 rounded-md object-cover" />
+                        <Image
+                          src={p.imageUrl}
+                          alt={p.name}
+                          width={40}
+                          height={40}
+                          className="h-10 w-10 rounded-md object-cover"
+                        />
                       ) : (
+                        // <Image src={p.imageUrl} alt={p.name} className="h-10 w-10 rounded-md object-cover" />
                         <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted">
                           <Package className="h-5 w-5 text-muted-foreground" />
                         </div>
@@ -156,7 +181,9 @@ export default function ProductsPage() {
                       <div className="min-w-0">
                         <p className="truncate font-medium">{p.name}</p>
                         {p.description && (
-                          <p className="truncate text-xs text-muted-foreground">{p.description}</p>
+                          <p className="truncate text-xs text-muted-foreground">
+                            {p.description}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -165,7 +192,11 @@ export default function ProductsPage() {
                     {p.category ?? "—"}
                   </td>
                   <td className="px-4 py-3">
-                    <StockBadge stockQty={p.stockQty} lowStockThreshold={p.lowStockThreshold} unit={p.unit} />
+                    <StockBadge
+                      stockQty={p.stockQty}
+                      lowStockThreshold={p.lowStockThreshold}
+                      unit={p.unit}
+                    />
                   </td>
                   {isAdmin && (
                     <td className="px-4 py-3 hidden lg:table-cell font-mono">
@@ -176,13 +207,28 @@ export default function ProductsPage() {
                     <div className="inline-flex gap-1">
                       {isAdmin && (
                         <>
-                          <Button size="sm" variant="ghost" onClick={() => openPurchase(p)} title="Nabava">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => openPurchase(p)}
+                            title="Nabava"
+                          >
                             <PackagePlus className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="ghost" onClick={() => openEdit(p)} title="Uredi">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => openEdit(p)}
+                            title="Uredi"
+                          >
                             <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="ghost" onClick={() => handleDelete(p)} title="Obriši">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDelete(p)}
+                            title="Obriši"
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </>

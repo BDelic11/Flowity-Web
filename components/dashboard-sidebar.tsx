@@ -14,6 +14,7 @@ import {
   Package,
   Building2,
 } from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
 import { useLocale } from "@/contexts/locale-context";
@@ -26,6 +27,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Roles } from "@/constants/roles";
+import logoIconSmall from "@/public/logos/logo-only.png";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -92,12 +94,19 @@ export function DashboardSidebar() {
         <div className="flex h-14 items-center justify-between px-4">
           <Link
             href="/"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-primary"
+            className="flex h-9 w-9 items-center justify-center rounded-full"
             aria-label="Home"
           >
-            <span className="text-base font-bold text-primary-foreground">
+            {/* <span className="text-base font-bold text-primary-foreground">
               F
-            </span>
+            </span> */}
+            <Image
+              src={logoIconSmall}
+              alt={"Logo icon small flowity"}
+              width={64}
+              height={64}
+              className="h-12 w-12 rounded-md object-cover"
+            />
           </Link>
 
           <Sheet open={open} onOpenChange={setOpen}>
@@ -150,9 +159,16 @@ export function DashboardSidebar() {
           {/* Logo */}
           <Link
             href="/"
-            className="mb-8 mx-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary"
+            className="mb-8 mx-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full "
           >
-            <span className="text-lg font-bold text-primary-foreground">F</span>
+            {/* <span className="text-lg font-bold text-primary-foreground">F</span> */}
+            <Image
+              src={logoIconSmall}
+              alt={"Logo icon small flowity"}
+              width={64}
+              height={64}
+              className="h-12 w-12 rounded-md object-cover"
+            />
           </Link>
 
           <nav className="flex flex-1 flex-col gap-1 px-2">

@@ -23,6 +23,8 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/auth-context";
 import Loading from "@/components/ui/loading";
 import { useLocale } from "@/contexts/locale-context";
+import Image from "next/image";
+import logoIconBig from "@/public/logos/large-logo.png";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,11 +34,14 @@ export default function LoginPage() {
     password: "",
   });
   const [showPw, setShowPw] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof LoginValues, string>>>({});
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<keyof LoginValues, string>>
+  >({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const { mutateAsync: loginUser } = useLogin();
-  const { mutateAsync: googleLogin, isPending: isGooglePending } = useGoogleAuth();
+  const { mutateAsync: googleLogin, isPending: isGooglePending } =
+    useGoogleAuth();
   const justLoggedIn = useRef(false);
 
   async function handleGoogleSuccess(accessToken: string) {
@@ -96,9 +101,16 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-primary/10">
+      <Card className="w-full max-w-md shadow-2xl">
         <CardHeader>
+          <Image
+            src={logoIconBig}
+            alt={"Logo icon small flowity"}
+            width={120}
+            height={120}
+            className="h-30 w-60 rounded-md object-cover"
+          />
           <CardTitle>{t("auth.signIn")}</CardTitle>
           <CardDescription>{t("auth.signInDesc")}</CardDescription>
         </CardHeader>
@@ -117,7 +129,11 @@ export default function LoginPage() {
                 aria-invalid={!!fieldErrors.email}
                 required
               />
-              {fieldErrors.email && <p className="text-xs text-destructive">{t(fieldErrors.email)}</p>}
+              {fieldErrors.email && (
+                <p className="text-xs text-destructive">
+                  {t(fieldErrors.email)}
+                </p>
+              )}
             </div>
 
             <div className="grid gap-2">
@@ -135,7 +151,9 @@ export default function LoginPage() {
                 />
                 <button
                   type="button"
-                  aria-label={showPw ? t("auth.hidePassword") : t("auth.showPassword")}
+                  aria-label={
+                    showPw ? t("auth.hidePassword") : t("auth.showPassword")
+                  }
                   onClick={() => setShowPw((s) => !s)}
                   className="absolute inset-y-0 right-2 inline-flex items-center justify-center rounded p-2 text-muted-foreground hover:text-foreground"
                   tabIndex={-1}
@@ -148,7 +166,9 @@ export default function LoginPage() {
                 </button>
               </div>
               {fieldErrors.password && (
-                <p className="text-xs text-destructive">{t(fieldErrors.password)}</p>
+                <p className="text-xs text-destructive">
+                  {t(fieldErrors.password)}
+                </p>
               )}
             </div>
 
@@ -163,7 +183,9 @@ export default function LoginPage() {
 
           <div className="my-4 flex items-center gap-3">
             <div className="h-px flex-1 bg-border" />
-            <span className="text-xs text-muted-foreground">{t("auth.or")}</span>
+            <span className="text-xs text-muted-foreground">
+              {t("auth.or")}
+            </span>
             <div className="h-px flex-1 bg-border" />
           </div>
 
