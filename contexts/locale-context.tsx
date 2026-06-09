@@ -45,7 +45,7 @@ function getNestedValue(obj: Messages, path: string): string {
 }
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+  const [locale, setLocaleState] = useState<Locale>("hr");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -82,14 +82,14 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     [locale]
   );
 
-  // Suppress hydration mismatch by rendering with "en" on server
+  // Suppress hydration mismatch by rendering with "hr" on server
   const value: LocaleContextValue = {
-    locale: mounted ? locale : "en",
+    locale: mounted ? locale : "hr",
     setLocale,
     t: mounted
       ? t
       : (key, params) => {
-          let str = getNestedValue(messages["en"], key);
+          let str = getNestedValue(messages["hr"], key);
           if (params) {
             for (const [k, v] of Object.entries(params)) {
               str = str.replace(`{{${k}}}`, v);
