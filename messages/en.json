@@ -272,7 +272,14 @@
     "edit": "Edit Appointment",
     "start": "Start",
     "end": "End",
-    "staff": "Staff"
+    "staff": "Staff",
+    "validation": {
+      "invalidDateTime": "Invalid date or time.",
+      "pastTime": "Start time can't be in the past.",
+      "opensAt": "Opens at {{time}}.",
+      "endBy": "Service must end by {{time}}.",
+      "staffCannotPerformService": "This staff member doesn't perform the selected service."
+    }
   },
   "validation": {
     "required": "Required",
@@ -491,5 +498,17 @@
     "invalidToken": "This invitation link is invalid or has expired.",
     "invalidTitle": "Invalid invite",
     "invalidDesc": "Ask your admin to send a new invitation."
+  },
+  "errors": {
+    "goBack": "Go back",
+    "toDashboard": "Go to dashboard",
+    "notFound": {
+      "title": "Page not found",
+      "description": "We could not find what you were looking for. It may have been moved or deleted."
+    },
+    "forbidden": {
+      "title": "Access denied",
+      "description": "You do not have permission to view this page. If you believe this is a mistake, contact your administrator."
+    }
   }
 }

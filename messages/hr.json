@@ -272,7 +272,14 @@
     "edit": "Uredi termin",
     "start": "Početak",
     "end": "Kraj",
-    "staff": "Osoblje"
+    "staff": "Osoblje",
+    "validation": {
+      "invalidDateTime": "Nevažeći datum ili vrijeme.",
+      "pastTime": "Početak termina ne može biti u prošlosti.",
+      "opensAt": "Radno vrijeme počinje u {{time}}.",
+      "endBy": "Usluga mora završiti do {{time}}.",
+      "staffCannotPerformService": "Ovaj djelatnik ne izvodi odabranu uslugu."
+    }
   },
   "validation": {
     "required": "Obavezno polje",
@@ -491,5 +498,17 @@
     "invalidToken": "Pozivnica je neispravna ili je istekla.",
     "invalidTitle": "Neispravna pozivnica",
     "invalidDesc": "Zatražite od administratora novu pozivnicu."
+  },
+  "errors": {
+    "goBack": "Natrag",
+    "toDashboard": "Na nadzornu ploču",
+    "notFound": {
+      "title": "Stranica nije pronađena",
+      "description": "Nismo mogli pronaći ono što tražite. Stranica je možda premještena ili obrisana."
+    },
+    "forbidden": {
+      "title": "Pristup odbijen",
+      "description": "Nemate ovlaštenje za pregled ove stranice. Ako smatrate da je ovo pogreška, kontaktirajte svog administratora."
+    }
   }
 }

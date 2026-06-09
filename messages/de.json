@@ -272,7 +272,14 @@
     "edit": "Termin bearbeiten",
     "start": "Beginn",
     "end": "Ende",
-    "staff": "Personal"
+    "staff": "Personal",
+    "validation": {
+      "invalidDateTime": "Ungültiges Datum oder Uhrzeit.",
+      "pastTime": "Die Startzeit darf nicht in der Vergangenheit liegen.",
+      "opensAt": "Öffnet um {{time}}.",
+      "endBy": "Der Service muss bis {{time}} enden.",
+      "staffCannotPerformService": "Dieser Mitarbeiter führt den ausgewählten Service nicht durch."
+    }
   },
   "validation": {
     "required": "Pflichtfeld",
@@ -491,5 +498,17 @@
     "invalidToken": "Dieser Einladungslink ist ungültig oder abgelaufen.",
     "invalidTitle": "Ungültige Einladung",
     "invalidDesc": "Bitten Sie Ihren Admin um eine neue Einladung."
+  },
+  "errors": {
+    "goBack": "Zurück",
+    "toDashboard": "Zum Dashboard",
+    "notFound": {
+      "title": "Seite nicht gefunden",
+      "description": "Wir konnten nicht finden, was Sie suchen. Es wurde möglicherweise verschoben oder gelöscht."
+    },
+    "forbidden": {
+      "title": "Zugriff verweigert",
+      "description": "Sie haben keine Berechtigung, diese Seite zu sehen. Wenn Sie glauben, dass dies ein Fehler ist, wenden Sie sich an Ihren Administrator."
+    }
   }
 }

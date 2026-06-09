@@ -27,16 +27,16 @@ export default function GlobalError({
           </div>
 
           <h1 className="text-3xl font-bold tracking-tight">
-            Something went wrong
+            Nešto je pošlo po krivu
           </h1>
           <p className="mt-2 text-muted-foreground">
-            An unexpected error occurred. You can try again or head back to
-            safety.
+            Došlo je do neočekivane greške. Možete pokušati ponovo ili se
+            vratiti na sigurno.
           </p>
 
           {error?.digest && (
             <p className="mt-2 text-xs text-muted-foreground">
-              Error ID: <code className="font-mono">{error.digest}</code>
+              ID greške: <code className="font-mono">{error.digest}</code>
             </p>
           )}
 
@@ -49,24 +49,24 @@ export default function GlobalError({
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <Button onClick={() => reset()} className="gap-2">
               <RefreshCw className="h-4 w-4" />
-              Try again
+              Pokušaj ponovo
             </Button>
 
             <Button asChild variant="secondary" className="gap-2">
               <Link href="/dashboard">
                 <Home className="h-4 w-4" />
-                Go to dashboard
+                Na nadzornu ploču
               </Link>
             </Button>
 
             <Button asChild variant="outline" className="gap-2">
               <a
-                href={`mailto:support@yourdomain.com?subject=Flowity%20AI%20Error&body=Error%20ID:%20${encodeURIComponent(
+                href={`mailto:support@flowity-ai.com?subject=Flowity%20Greška&body=ID%20greške:%20${encodeURIComponent(
                   error?.digest ?? "n/a"
-                )}%0D%0A%0D%0ADescription:%20`}
+                )}%0D%0A%0D%0AOpis:%20`}
               >
                 <Bug className="h-4 w-4" />
-                Report issue
+                Prijavi problem
               </a>
             </Button>
           </div>

@@ -31,12 +31,12 @@ const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 const AppointmentZ = z.object({
-  clientName: z.string().trim().min(2, "Too short").max(120, "Too long"),
-  staffId: z.string().min(1, "Required"),
-  serviceId: z.string().min(1, "Required"),
-  date: z.string().regex(dateRegex, "Invalid date"),
-  time: z.string().regex(timeRegex, "Invalid time"),
-  notes: z.string().max(1000, "Too long").optional(),
+  clientName: z.string().trim().min(2, "validation.tooShort").max(120, "validation.tooLong"),
+  staffId: z.string().min(1, "validation.required"),
+  serviceId: z.string().min(1, "validation.required"),
+  date: z.string().regex(dateRegex, "validation.invalid"),
+  time: z.string().regex(timeRegex, "validation.invalid"),
+  notes: z.string().max(1000, "validation.tooLong").optional(),
 });
 type FormValues = z.infer<typeof AppointmentZ>;
 
@@ -135,14 +135,14 @@ export function AppointmentDialog({
             const selectedSvc = services.find((s) => s.id === values.serviceId);
             if (selectedSvc && selectedSvc.workerIds.length > 0 && values.staffId) {
               if (!selectedSvc.workerIds.includes(values.staffId)) {
-                errs.staffId = "This staff member doesn't perform the selected service.";
+                errs.staffId = "appointments.validation.staffCannotPerformService";
               }
             }
 
             // Compose start as LOCAL time (no TZ offset here)
             const startLocal = new Date(`${values.date}T${values.time}:00`);
             if (isNaN(startLocal.getTime())) {
-              errs.time ??= "Invalid date/time.";
+              errs.time ??= "appointments.validation.invalidDateTime";
               return errs;
             }
 
@@ -150,7 +150,7 @@ export function AppointmentDialog({
             if (!appointment) {
               const now = new Date();
               if (startLocal.getTime() < now.getTime() - 5000) {
-                errs.time ??= "Start time can’t be in the past.";
+                errs.time ??= "appointments.validation.pastTime";
               }
             }
 
@@ -165,14 +165,11 @@ export function AppointmentDialog({
             const dayEnd = workingEndHour * 60; // exclusive upper bound
 
             if (startMinutes < dayStart) {
-              errs.time ??= `Opens at ${String(workingStartHour).padStart(
-                2,
-                "0"
-              )}:00.`;
+              const hh = String(workingStartHour).padStart(2, "0");
+              errs.time ??= t("appointments.validation.opensAt", { time: `${hh}:00` });
             } else if (endMinutes > dayEnd) {
-              // pick which message you prefer:
               const hh = String(workingEndHour).padStart(2, "0");
-              errs.time ??= `Service must end by ${hh}:00.`;
+              errs.time ??= t("appointments.validation.endBy", { time: `${hh}:00` });
             }
 
             return errs;
@@ -222,7 +219,7 @@ export function AppointmentDialog({
                   />
                   {touched.clientName && errors.clientName && (
                     <p className="text-xs text-destructive">
-                      {errors.clientName}
+                      {t(errors.clientName)}
                     </p>
                   )}
                 </div>
@@ -254,7 +251,7 @@ export function AppointmentDialog({
                   </Select>
                   {touched.serviceId && errors.serviceId && (
                     <p className="text-xs text-destructive">
-                      {errors.serviceId}
+                      {t(errors.serviceId)}
                     </p>
                   )}
                 </div>
@@ -278,7 +275,7 @@ export function AppointmentDialog({
                     </SelectContent>
                   </Select>
                   {touched.staffId && errors.staffId && (
-                    <p className="text-xs text-destructive">{errors.staffId}</p>
+                    <p className="text-xs text-destructive">{t(errors.staffId)}</p>
                   )}
                 </div>
 
@@ -288,14 +285,14 @@ export function AppointmentDialog({
                     <Label htmlFor="date">{t("appointments.date")}</Label>
                     <Field as={Input} id="date" name="date" type="date" />
                     {touched.date && errors.date && (
-                      <p className="text-xs text-destructive">{errors.date}</p>
+                      <p className="text-xs text-destructive">{t(errors.date)}</p>
                     )}
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="time">{t("appointments.startTime")}</Label>
                     <Field as={Input} id="time" name="time" type="time" />
                     {touched.time && errors.time && (
-                      <p className="text-xs text-destructive">{errors.time}</p>
+                      <p className="text-xs text-destructive">{t(errors.time)}</p>
                     )}
                   </div>
                 </div>
@@ -311,7 +308,7 @@ export function AppointmentDialog({
                     placeholder={t("appointments.notesPlaceholder")}
                   />
                   {touched.notes && errors.notes && (
-                    <p className="text-xs text-destructive">{errors.notes}</p>
+                    <p className="text-xs text-destructive">{t(errors.notes)}</p>
                   )}
                 </div>
               </div>
