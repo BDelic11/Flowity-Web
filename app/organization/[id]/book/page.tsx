@@ -56,7 +56,7 @@ type Selection = {
 // ─────────────────────────── Helpers ─────────────────────────────────────────
 
 function formatPrice(min?: number | null, max?: number | null): string {
-  if (min == null) return "Free";
+  if (min == null) return "Besplatno";
   if (max != null && max !== min) return `€${min} – €${max}`;
   return `€${min}`;
 }
@@ -68,18 +68,33 @@ function formatDuration(mins: number): string {
   return m === 0 ? `${h}h` : `${h}h ${m}min`;
 }
 
+const HR_DAYS = ["Po", "Ut", "Sr", "Če", "Pe", "Su", "Ne"];
+const HR_MONTHS = [
+  "siječanj", "veljača", "ožujak", "travanj", "svibanj", "lipanj",
+  "srpanj", "kolovoz", "rujan", "listopad", "studeni", "prosinac",
+];
+const HR_MONTHS_CAP = [
+  "Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj",
+  "Srpanj", "Kolovoz", "Rujan", "Listopad", "Studeni", "Prosinac",
+];
+
+function formatMonthYear(d: Date): string {
+  return `${HR_MONTHS_CAP[d.getMonth()]} ${d.getFullYear()}`;
+}
+
 function dayLabel(d: Date): string {
-  if (isToday(d)) return "Today";
-  return format(d, "EEE, MMM d");
+  if (isToday(d)) return "Danas";
+  const day = HR_DAYS[(d.getDay() + 6) % 7]; // Mon=0
+  return `${day}, ${d.getDate()}. ${HR_MONTHS[d.getMonth()]}`;
 }
 
 // ─────────────────────────── Step indicator ──────────────────────────────────
 
 const STEPS: { id: Step; label: string }[] = [
-  { id: "service", label: "Service" },
-  { id: "staff", label: "Staff" },
-  { id: "datetime", label: "Date & Time" },
-  { id: "details", label: "Details" },
+  { id: "service", label: "Usluga" },
+  { id: "staff", label: "Djelatnik" },
+  { id: "datetime", label: "Datum i vrijeme" },
+  { id: "details", label: "Detalji" },
 ];
 
 function StepBar({ current }: { current: Step }) {
@@ -144,9 +159,9 @@ function ServiceStep({
 }) {
   return (
     <div className="space-y-3">
-      <h2 className="text-xl font-bold text-gray-900">Choose a service</h2>
+      <h2 className="text-xl font-bold text-gray-900">Odaberite uslugu</h2>
       <p className="text-sm text-gray-500 mb-6">
-        What can we do for you today?
+        Što možemo učiniti za vas danas?
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         {services.map((svc) => (
@@ -211,10 +226,10 @@ function StaffStep({
         onClick={onBack}
         className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 mb-2"
       >
-        <ArrowLeft className="h-4 w-4" /> Back
+        <ArrowLeft className="h-4 w-4" /> Natrag
       </button>
-      <h2 className="text-xl font-bold text-gray-900">Choose a team member</h2>
-      <p className="text-sm text-gray-500 mb-6">Or let us pick for you.</p>
+      <h2 className="text-xl font-bold text-gray-900">Odaberite djelatnika</h2>
+      <p className="text-sm text-gray-500 mb-6">Ili prepustite nama da odaberemo.</p>
 
       {/* Any staff option */}
       <button
@@ -227,10 +242,10 @@ function StaffStep({
           </div>
           <div>
             <p className="font-semibold text-emerald-800">
-              Any available staff
+              Bilo koji dostupni djelatnik
             </p>
             <p className="text-xs text-emerald-600">
-              We'll assign the best available team member
+              Dodijelit ćemo najboljeg dostupnog člana tima
             </p>
           </div>
         </div>
@@ -312,7 +327,7 @@ function MiniCalendar({
           <ChevronLeft className="h-5 w-5 text-gray-500" />
         </button>
         <span className="font-semibold text-gray-800">
-          {format(viewMonth, "MMMM yyyy")}
+          {formatMonthYear(viewMonth)}
         </span>
         <button
           onClick={nextMonth}
@@ -324,7 +339,7 @@ function MiniCalendar({
 
       {/* Day headers */}
       <div className="grid grid-cols-7 mb-1">
-        {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((d) => (
+        {HR_DAYS.map((d) => (
           <div
             key={d}
             className="text-center text-[11px] font-medium text-gray-400 py-1"
@@ -428,10 +443,10 @@ function DateTimeStep({
         onClick={onBack}
         className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 mb-4"
       >
-        <ArrowLeft className="h-4 w-4" /> Back
+        <ArrowLeft className="h-4 w-4" /> Natrag
       </button>
       <h2 className="text-xl font-bold text-gray-900 mb-1">
-        Pick a date & time
+        Odaberite datum i vrijeme
       </h2>
       <p className="text-sm text-gray-500 mb-6">
         {service.name} · {formatDuration(service.durationMin)}
@@ -452,7 +467,7 @@ function DateTimeStep({
           {!selectedDate ? (
             <div className="flex flex-col items-center justify-center h-48 text-center text-gray-400">
               <Calendar className="h-10 w-10 mb-3 opacity-30" />
-              <p className="text-sm font-medium">Select a date first</p>
+              <p className="text-sm font-medium">Odaberite datum</p>
             </div>
           ) : isLoading ? (
             <div className="flex items-center justify-center h-48">
@@ -461,14 +476,13 @@ function DateTimeStep({
           ) : !availability?.slots.length ? (
             <div className="flex flex-col items-center justify-center h-48 text-center text-gray-400">
               <Clock className="h-10 w-10 mb-3 opacity-30" />
-              <p className="text-sm font-medium">No slots available</p>
-              <p className="text-xs mt-1">Try a different date</p>
+              <p className="text-sm font-medium">Nema dostupnih termina</p>
+              <p className="text-xs mt-1">Pokušajte drugi datum</p>
             </div>
           ) : (
             <div>
               <p className="text-sm font-semibold text-gray-700 mb-3">
-                {dayLabel(selectedDate)} — {availability.slots.length} slots
-                available
+                {dayLabel(selectedDate)} — {availability.slots.length} dostupnih termina
               </p>
               <div className="grid grid-cols-3 gap-2">
                 {availability.slots.map((slot) => (
@@ -498,17 +512,17 @@ function DateTimeStep({
           <div className="flex items-center justify-between bg-emerald-50 rounded-2xl p-4">
             <div>
               <p className="text-sm font-semibold text-emerald-800">
-                {dayLabel(selectedDate)} at {selectedSlot.time}
+                {dayLabel(selectedDate)} u {selectedSlot.time}
               </p>
               <p className="text-xs text-emerald-600 mt-0.5">
-                Duration: {formatDuration(service.durationMin)}
+                Trajanje: {formatDuration(service.durationMin)}
               </p>
             </div>
             <button
               onClick={handleContinue}
               className="bg-emerald-600 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-emerald-700 transition-colors shadow-sm"
             >
-              Continue
+              Nastavi
             </button>
           </div>
         </div>
@@ -540,8 +554,8 @@ function DetailsStep({
 
   const validate = () => {
     const e: { name?: string; phone?: string } = {};
-    if (name.trim().length < 2) e.name = "Please enter your full name";
-    if (phone.trim().length < 6) e.phone = "Please enter a valid phone number";
+    if (name.trim().length < 2) e.name = "Unesite puno ime i prezime";
+    if (phone.trim().length < 6) e.phone = "Unesite ispravan broj telefona";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -560,7 +574,7 @@ function DetailsStep({
       });
       onConfirmed(result.id);
     } catch {
-      setErrors({ name: "Booking failed. Please try again." });
+      setErrors({ name: "Rezervacija nije uspjela. Pokušajte ponovo." });
     }
   };
 
@@ -570,11 +584,11 @@ function DetailsStep({
         onClick={onBack}
         className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 mb-4"
       >
-        <ArrowLeft className="h-4 w-4" /> Back
+        <ArrowLeft className="h-4 w-4" /> Natrag
       </button>
-      <h2 className="text-xl font-bold text-gray-900 mb-1">Your details</h2>
+      <h2 className="text-xl font-bold text-gray-900 mb-1">Vaši podaci</h2>
       <p className="text-sm text-gray-500 mb-6">
-        Almost there! Just a few details.
+        Još samo nekoliko detalja!
       </p>
 
       {/* Booking summary */}
@@ -598,13 +612,13 @@ function DetailsStep({
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <Calendar className="h-4 w-4 text-emerald-600" />
           <span>
-            {selection.date ? dayLabel(selection.date) : ""} at{" "}
+            {selection.date ? dayLabel(selection.date) : ""} u{" "}
             {selection.slot?.time}
           </span>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <User className="h-4 w-4 text-emerald-600" />
-          <span>{selection.staff?.name ?? "Any available staff"}</span>
+          <span>{selection.staff?.name ?? "Bilo koji dostupni djelatnik"}</span>
         </div>
       </div>
 
@@ -612,7 +626,7 @@ function DetailsStep({
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Full name <span className="text-red-500">*</span>
+            Puno ime i prezime <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -633,7 +647,7 @@ function DetailsStep({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Phone number <span className="text-red-500">*</span>
+            Broj telefona <span className="text-red-500">*</span>
           </label>
           <input
             type="tel"
@@ -654,15 +668,15 @@ function DetailsStep({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Notes{" "}
+            Napomena{" "}
             <span className="text-gray-400 text-xs font-normal">
-              (optional)
+              (neobavezno)
             </span>
           </label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="Any special requests or notes..."
+            placeholder="Posebni zahtjevi ili napomene..."
             rows={3}
             className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none transition-colors focus:border-emerald-400 bg-white resize-none"
           />
@@ -676,10 +690,10 @@ function DetailsStep({
           {isPending ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin" />
-              Booking...
+              Rezerviranje...
             </>
           ) : (
-            "Confirm booking"
+            "Potvrdi rezervaciju"
           )}
         </button>
       </div>
@@ -705,11 +719,11 @@ function ConfirmedStep({
           <CheckCircle className="h-11 w-11 text-emerald-600" />
         </div>
       </div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-2">You're booked!</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-2">Rezervacija potvrđena!</h2>
       <p className="text-gray-500 mb-8">
-        Your appointment at{" "}
-        <span className="font-semibold text-gray-700">{salonName}</span> is
-        confirmed.
+        Vaš termin u{" "}
+        <span className="font-semibold text-gray-700">{salonName}</span>{" "}
+        je potvrđen.
       </p>
 
       <div className="bg-gray-50 rounded-2xl p-5 text-left border border-gray-100 max-w-sm mx-auto space-y-3 mb-8">
@@ -718,7 +732,7 @@ function ConfirmedStep({
             <Scissors className="h-4 w-4 text-emerald-600" />
           </div>
           <div>
-            <p className="text-xs text-gray-400">Service</p>
+            <p className="text-xs text-gray-400">Usluga</p>
             <p className="font-semibold text-gray-800 text-sm">
               {selection.service?.name}
             </p>
@@ -729,9 +743,9 @@ function ConfirmedStep({
             <Calendar className="h-4 w-4 text-emerald-600" />
           </div>
           <div>
-            <p className="text-xs text-gray-400">Date & time</p>
+            <p className="text-xs text-gray-400">Datum i vrijeme</p>
             <p className="font-semibold text-gray-800 text-sm">
-              {selection.date ? dayLabel(selection.date) : ""} at{" "}
+              {selection.date ? dayLabel(selection.date) : ""} u{" "}
               {selection.slot?.time}
             </p>
           </div>
@@ -741,9 +755,9 @@ function ConfirmedStep({
             <User className="h-4 w-4 text-emerald-600" />
           </div>
           <div>
-            <p className="text-xs text-gray-400">Team member</p>
+            <p className="text-xs text-gray-400">Djelatnik</p>
             <p className="font-semibold text-gray-800 text-sm">
-              {selection.staff?.name ?? "Any available staff"}
+              {selection.staff?.name ?? "Bilo koji dostupni djelatnik"}
             </p>
           </div>
         </div>
@@ -753,7 +767,7 @@ function ConfirmedStep({
         onClick={onStartOver}
         className="text-sm text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-2"
       >
-        Book another appointment
+        Rezerviraj još jedan termin
       </button>
     </div>
   );
@@ -778,7 +792,7 @@ function SidebarSummary({
           </div>
           <div>
             <h1 className="text-lg font-bold text-gray-900">{salon.name}</h1>
-            <p className="text-xs text-emerald-600 font-medium">Book online</p>
+            <p className="text-xs text-emerald-600 font-medium">Online rezervacija</p>
           </div>
         </div>
         {salon.address && (
@@ -799,7 +813,7 @@ function SidebarSummary({
       {(selection.service || selection.slot) && (
         <div className="border-t border-gray-100 pt-6">
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
-            Your selection
+            Vaš odabir
           </p>
           <div className="space-y-3">
             {selection.service && (
@@ -828,7 +842,7 @@ function SidebarSummary({
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-gray-400" />
                 <p className="text-sm text-gray-600">
-                  {selection.staff?.name ?? "Any available staff"}
+                  {selection.staff?.name ?? "Bilo koji dostupni djelatnik"}
                 </p>
               </div>
             )}
@@ -836,7 +850,7 @@ function SidebarSummary({
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-gray-400" />
                 <p className="text-sm text-gray-600">
-                  {dayLabel(selection.date)} at {selection.slot.time}
+                  {dayLabel(selection.date)} u {selection.slot.time}
                 </p>
               </div>
             )}
@@ -895,7 +909,7 @@ export default function BookPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-10 w-10 animate-spin text-emerald-500 mx-auto mb-3" />
-          <p className="text-sm text-gray-500">Loading salon...</p>
+          <p className="text-sm text-gray-500">Učitavanje...</p>
         </div>
       </div>
     );
@@ -907,11 +921,10 @@ export default function BookPage() {
         <div className="text-center max-w-sm px-6">
           <div className="text-5xl mb-4">😕</div>
           <h2 className="text-xl font-bold text-gray-800 mb-2">
-            Salon not found
+            Salon nije pronađen
           </h2>
           <p className="text-sm text-gray-500">
-            This booking link may be incorrect or the salon may no longer be
-            active.
+            Ova booking poveznica je možda netočna ili salon više nije aktivan.
           </p>
         </div>
       </div>
