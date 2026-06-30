@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Calendar,
   Users,
@@ -13,11 +13,15 @@ import {
   Download,
   Package,
   Building2,
+  User as UserIcon,
+  Settings,
+  LogOut,
+  Globe,
 } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
-import { useLocale } from "@/contexts/locale-context";
+import { useLocale, LOCALE_LABELS, type Locale } from "@/contexts/locale-context";
 import * as React from "react";
 import {
   Sheet,
@@ -26,14 +30,30 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { NotificationBell } from "@/components/notifications/notification-bell";
+import { useLogout } from "@/app/api/hooks/auth/useLogOut";
+import { routes } from "@/constants/routes";
 import { Roles } from "@/constants/roles";
 import logoIconSmall from "@/public/logos/logo-only.png";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const user = useAuth();
-  const { t } = useLocale();
+  const authUser = user.user;
+  const { t, locale, setLocale } = useLocale();
+  const { mutate: logout } = useLogout();
   const [open, setOpen] = React.useState(false);
+  const [signingOut, setSigningOut] = React.useState(false);
+
+  function handleSignOut() {
+    setSigningOut(true);
+    logout();
+    setOpen(false);
+    router.push(routes.login);
+    router.refresh();
+  }
 
   const baseNav = [
     { key: "nav.dashboard", href: "/dashboard", icon: Home },
@@ -120,10 +140,32 @@ export function DashboardSidebar() {
             </SheetTrigger>
 
             {/* slide from top */}
-            <SheetContent side="top" className="p-0">
+            <SheetContent side="top" className="p-0 max-h-[85vh] overflow-y-auto">
               <SheetHeader className="px-4 py-3 border-b">
                 <SheetTitle className="text-sm">{t("nav.menu")}</SheetTitle>
               </SheetHeader>
+
+              {authUser && (
+                <div className="flex items-center justify-between gap-3 px-4 py-3 border-b">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Avatar className="h-9 w-9 shrink-0">
+                      <AvatarFallback>
+                        {authUser.name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">
+                        {authUser.name}
+                      </p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {authUser.email}
+                      </p>
+                    </div>
+                  </div>
+                  <NotificationBell />
+                </div>
+              )}
+
               <nav className="py-1">
                 {navigation.map((item) => {
                   const isActive = pathname === item.href;
@@ -148,6 +190,61 @@ export function DashboardSidebar() {
                   );
                 })}
               </nav>
+
+              <div className="border-t py-1">
+                <Link
+                  href="/dashboard/profile"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 text-sm transition-colors hover:bg-muted"
+                >
+                  <UserIcon className="h-4 w-4" />
+                  <span>{t("header.profile")}</span>
+                </Link>
+                <Link
+                  href="/dashboard/settings"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 text-sm transition-colors hover:bg-muted"
+                >
+                  <Settings className="h-4 w-4" />
+                  <span>{t("header.settings")}</span>
+                </Link>
+              </div>
+
+              <div className="border-t py-1">
+                <div className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-muted-foreground">
+                  <Globe className="h-4 w-4" />
+                  <span>{t("header.language")}</span>
+                </div>
+                <div className="flex flex-wrap gap-2 px-4 pb-2">
+                  {(Object.keys(LOCALE_LABELS) as Locale[]).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => setLocale(l)}
+                      className={cn(
+                        "rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
+                        locale === l
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border hover:bg-muted"
+                      )}
+                    >
+                      {LOCALE_LABELS[l]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t py-1">
+                <button
+                  onClick={handleSignOut}
+                  disabled={signingOut}
+                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-60"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>
+                    {signingOut ? t("header.signingOut") : t("header.signOut")}
+                  </span>
+                </button>
+              </div>
             </SheetContent>
           </Sheet>
         </div>

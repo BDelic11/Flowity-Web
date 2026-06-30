@@ -52,9 +52,9 @@ export default function DashboardLayout({
 
   return (
     <NotificationProvider>
-      <div className="flex min-h-screen">
+      <div className="flex h-dvh overflow-hidden">
         <DashboardSidebar />
-        <div className="flex flex-1 flex-col pt-14 md:pt-0 md:pl-16">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col pt-14 md:pt-0 md:pl-16">
           {!user.isEmailVerified && <EmailVerificationBanner email={user.email} />}
           <div className="hidden md:block">
             <DashboardHeader
@@ -62,7 +62,7 @@ export default function DashboardLayout({
               tenantName={user.tenantName || "Salon"}
             />
           </div>
-          <main className="flex-1 bg-muted/40">{children}</main>
+          <main className="flex-1 min-h-0 overflow-y-auto bg-muted/40">{children}</main>
         </div>
       </div>
       <OnboardingGate userId={user.id} />

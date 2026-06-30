@@ -35,7 +35,8 @@
     "profile": "Profil",
     "settings": "Postavke",
     "signOut": "Odjava",
-    "signingOut": "Odjava u tijeku..."
+    "signingOut": "Odjava u tijeku...",
+    "language": "Jezik"
   },
   "dashboard": {
     "title": "Nadzorna ploča",

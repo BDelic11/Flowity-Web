@@ -25,7 +25,7 @@ export default function CalendarPage() {
 
   if (!user.organizationId) {
     return (
-      <div className="flex h-[calc(100vh-4rem)] items-center justify-center text-muted-foreground">
+      <div className="flex h-full items-center justify-center text-muted-foreground">
         {t("calendar.noOrganization")}
       </div>
     );
