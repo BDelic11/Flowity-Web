@@ -28,8 +28,11 @@ export const useLogin = () => {
     mutationFn: login,
     onSuccess: async (data) => {
       localStorage.setItem("token", data.access_token);
-      // Refetch user so auth context is populated before any redirect
-      await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      // Use refetchQueries (not invalidateQueries) so the currentUser query
+      // fully completes before the caller does router.push("/dashboard").
+      // invalidateQueries only marks stale and resolves immediately — the
+      // dashboard guard would see user=null and redirect back to login.
+      await queryClient.refetchQueries({ queryKey: ["currentUser"] });
     },
   });
 };

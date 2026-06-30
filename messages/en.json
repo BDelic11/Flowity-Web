@@ -35,7 +35,8 @@
     "profile": "Profile",
     "settings": "Settings",
     "signOut": "Sign out",
-    "signingOut": "Signing out..."
+    "signingOut": "Signing out...",
+    "language": "Language"
   },
   "dashboard": {
     "title": "Dashboard",

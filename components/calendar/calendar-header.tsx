@@ -43,18 +43,19 @@ export function CalendarHeader({
 
   return (
     <>
-      <div className="flex items-center justify-between border-b bg-background px-4 py-3 md:px-6 md:py-4">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-3 border-b bg-background px-4 py-3 md:flex-row md:items-center md:justify-between md:px-6 md:py-4">
+        <div className="flex items-center gap-1 sm:gap-2">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => shiftDate(-1)}
             disabled={isPending}
+            className="shrink-0"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
 
-          <div className="min-w-[220px] text-center font-medium">
+          <div className="min-w-0 flex-1 truncate text-center text-sm font-medium sm:min-w-[220px] sm:flex-none md:text-base">
             {format(currentDate, "EEEE, dd MMM yyyy")}
             {isPending && (
               <span className="ml-2 text-xs text-muted-foreground">{t("calendar.loading")}</span>
@@ -66,6 +67,7 @@ export function CalendarHeader({
             size="icon"
             onClick={() => shiftDate(1)}
             disabled={isPending}
+            className="shrink-0"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -75,6 +77,7 @@ export function CalendarHeader({
             size="sm"
             onClick={() => onDateChange(new Date())}
             disabled={isPending}
+            className="shrink-0"
           >
             {t("calendar.today")}
           </Button>
@@ -82,7 +85,7 @@ export function CalendarHeader({
 
         <Button
           onClick={() => setDialogOpen(true)}
-          className="gap-2"
+          className="w-full gap-2 md:w-auto"
           disabled={isPending || staffOptions.length === 0}
         >
           <Plus className="h-4 w-4" />

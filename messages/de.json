@@ -35,7 +35,8 @@
     "profile": "Profil",
     "settings": "Einstellungen",
     "signOut": "Abmelden",
-    "signingOut": "Abmeldung..."
+    "signingOut": "Abmeldung...",
+    "language": "Sprache"
   },
   "dashboard": {
     "title": "Dashboard",

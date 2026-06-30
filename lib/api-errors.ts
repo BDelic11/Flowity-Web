@@ -27,6 +27,8 @@ interface ProblemDetailsLike {
   detail?: string;
   errors?: ValidationItem[];
   code?: string;
+  /** Backend Result<T> failure — Error record serializes { code, name } not { code, description } */
+  name?: string;
   description?: string;
 }
 
@@ -92,9 +94,11 @@ export function parseApiError(
   }
 
   // Result<T> failure shape — translate code first.
-  if (data?.code || data?.description) {
+  // Backend Error record serializes as { code, name } — check both name and
+  // description so we always show a human-readable message, never a raw code.
+  if (data?.code || data?.description || data?.name) {
     const translated = data.code ? ERROR_CODE_MESSAGES[data.code] : undefined;
-    return { message: translated ?? data.description ?? data.code ?? fallback, fieldErrors: {} };
+    return { message: translated ?? data.description ?? data.name ?? data.code ?? fallback, fieldErrors: {} };
   }
 
   // Plain ProblemDetails.

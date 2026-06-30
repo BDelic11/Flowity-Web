@@ -102,7 +102,7 @@ export default function StaffClient({
 
   return (
     <PageLayout>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight pb-2">
             {t("staff.title")}
@@ -110,9 +110,9 @@ export default function StaffClient({
           <p className="text-muted-foreground">{t("staff.description")}</p>
         </div>
         {isAdmin && (
-          <Button onClick={handleAddNew} className="gap-2">
+          <Button onClick={handleAddNew} className="gap-2 shrink-0">
             <Plus className="h-4 w-4" />
-            {t("staff.addStaff")}
+            <span className="hidden sm:inline">{t("staff.addStaff")}</span>
           </Button>
         )}
       </div>

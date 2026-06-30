@@ -104,7 +104,7 @@ export function CalendarClient({ organizationId, workerFilter }: Props) {
   }
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col">
+    <div className="flex h-full flex-col">
       <CalendarHeader
         currentDate={currentDate}
         onDateChange={setCurrentDate}
