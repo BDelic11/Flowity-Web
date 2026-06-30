@@ -230,12 +230,14 @@ export default function SettingsPage() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="general">{t("settings.tabGeneral")}</TabsTrigger>
-          <TabsTrigger value="business">{t("settings.tabBusiness")}</TabsTrigger>
-          <TabsTrigger value="booking">{t("settings.tabBooking")}</TabsTrigger>
-          <TabsTrigger value="subscription">Pretplata</TabsTrigger>
-        </TabsList>
+        <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+          <TabsList className="w-max sm:w-fit">
+            <TabsTrigger value="general">{t("settings.tabGeneral")}</TabsTrigger>
+            <TabsTrigger value="business">{t("settings.tabBusiness")}</TabsTrigger>
+            <TabsTrigger value="booking">{t("settings.tabBooking")}</TabsTrigger>
+            <TabsTrigger value="subscription">Pretplata</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="general">
           <SettingsGeneralTab

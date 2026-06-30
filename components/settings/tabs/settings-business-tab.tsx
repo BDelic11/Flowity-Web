@@ -110,14 +110,17 @@ export function SettingsBusinessTab({
         {rows.map((row, i) => {
           const mirrored = syncWeekdays && isWeekday(row.day) && !isMonday(row.day);
           return (
-            <div key={row.day} className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+            <div
+              key={row.day}
+              className="flex flex-col gap-3 border-b pb-4 last:border-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between sm:border-0 sm:pb-0"
+            >
+              <div className="flex items-center gap-3 sm:gap-4">
                 <Switch
                   checked={row.enabled}
                   onCheckedChange={(v) => update(i, { enabled: v })}
                   disabled={mirrored}
                 />
-                <span className="w-28 font-medium">
+                <span className="font-medium sm:w-28">
                   {row.day}
                   {mirrored && (
                     <span className="ml-2 text-[10px] font-normal uppercase tracking-wide text-primary">
@@ -126,12 +129,12 @@ export function SettingsBusinessTab({
                   )}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Input
                   type="time"
                   value={row.open}
                   onChange={(e) => update(i, { open: e.target.value })}
-                  className="w-32"
+                  className="w-[calc(50%-1.25rem)] min-w-[100px] sm:w-32"
                   disabled={!row.enabled || mirrored}
                 />
                 <span className="text-muted-foreground">{t("settings.business.to")}</span>
@@ -139,7 +142,7 @@ export function SettingsBusinessTab({
                   type="time"
                   value={row.close}
                   onChange={(e) => update(i, { close: e.target.value })}
-                  className="w-32"
+                  className="w-[calc(50%-1.25rem)] min-w-[100px] sm:w-32"
                   disabled={!row.enabled || mirrored}
                 />
               </div>
