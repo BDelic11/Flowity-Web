@@ -15,6 +15,7 @@ import {
   markOnboardingCompleted,
 } from "@/components/onboarding/onboarding-dialog";
 import { EmailVerificationBanner } from "@/components/auth/email-verification-banner";
+import { FeedbackWidget } from "@/components/feedback/feedback-widget";
 
 export default function DashboardLayout({
   children,
@@ -66,6 +67,7 @@ export default function DashboardLayout({
         </div>
       </div>
       <OnboardingGate userId={user.id} />
+      <FeedbackWidget />
     </NotificationProvider>
   );
 }

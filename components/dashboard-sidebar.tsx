@@ -21,7 +21,11 @@ import {
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
-import { useLocale, LOCALE_LABELS, type Locale } from "@/contexts/locale-context";
+import {
+  useLocale,
+  LOCALE_LABELS,
+  type Locale,
+} from "@/contexts/locale-context";
 import * as React from "react";
 import {
   Sheet,
@@ -140,7 +144,10 @@ export function DashboardSidebar() {
             </SheetTrigger>
 
             {/* slide from top */}
-            <SheetContent side="top" className="p-0 max-h-[85vh] overflow-y-auto">
+            <SheetContent
+              side="top"
+              className="p-0 max-h-[85vh] overflow-y-auto"
+            >
               <SheetHeader className="px-4 py-3 border-b">
                 <SheetTitle className="text-sm">{t("nav.menu")}</SheetTitle>
               </SheetHeader>
