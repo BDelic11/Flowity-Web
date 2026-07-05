@@ -29,7 +29,8 @@
     "profile": "Profil",
     "export": "Export",
     "products": "Materialien",
-    "organizations": "Salons"
+    "organizations": "Salons",
+    "tickets": "Tickets"
   },
   "header": {
     "profile": "Profil",
@@ -511,5 +512,23 @@
       "title": "Zugriff verweigert",
       "description": "Sie haben keine Berechtigung, diese Seite zu sehen. Wenn Sie glauben, dass dies ein Fehler ist, wenden Sie sich an Ihren Administrator."
     }
+  },
+  "feedback": {
+    "openButton": "Feedback senden",
+    "title": "Feedback",
+    "description": "Melden Sie einen Fehler oder Vorschlag. Seiten- und Browserinformationen werden automatisch mitgesendet.",
+    "type": "Art",
+    "types": {
+      "Bug": "Fehler",
+      "Suggestion": "Vorschlag",
+      "Other": "Sonstiges"
+    },
+    "titleLabel": "Titel",
+    "titlePlaceholder": "Kurze Beschreibung des Problems",
+    "messageLabel": "Nachricht",
+    "messagePlaceholder": "Beschreiben Sie, was passiert ist, die Schritte zur Reproduktion oder Ihre Idee...",
+    "send": "Senden",
+    "sent": "Danke! Ihr Feedback wurde gesendet.",
+    "sendFailed": "Feedback konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
   }
 }

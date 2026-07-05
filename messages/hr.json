@@ -29,7 +29,8 @@
     "profile": "Profil",
     "export": "Izvoz",
     "products": "Materijali",
-    "organizations": "Saloni"
+    "organizations": "Saloni",
+    "tickets": "Prijave"
   },
   "header": {
     "profile": "Profil",
@@ -511,5 +512,23 @@
       "title": "Pristup odbijen",
       "description": "Nemate ovlaštenje za pregled ove stranice. Ako smatrate da je ovo pogreška, kontaktirajte svog administratora."
     }
+  },
+  "feedback": {
+    "openButton": "Pošalji povratnu informaciju",
+    "title": "Povratna informacija",
+    "description": "Prijavite bug ili prijedlog. Automatski šaljemo podatke o stranici i pregledniku.",
+    "type": "Vrsta",
+    "types": {
+      "Bug": "Bug",
+      "Suggestion": "Prijedlog",
+      "Other": "Ostalo"
+    },
+    "titleLabel": "Naslov",
+    "titlePlaceholder": "Kratak opis problema",
+    "messageLabel": "Poruka",
+    "messagePlaceholder": "Opišite što se dogodilo, korake za reprodukciju ili prijedlog...",
+    "send": "Pošalji",
+    "sent": "Hvala! Povratna informacija je poslana.",
+    "sendFailed": "Slanje nije uspjelo. Pokušajte ponovo."
   }
 }

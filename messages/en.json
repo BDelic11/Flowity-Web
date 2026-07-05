@@ -29,7 +29,8 @@
     "profile": "Profile",
     "export": "Export",
     "products": "Materials",
-    "organizations": "Salons"
+    "organizations": "Salons",
+    "tickets": "Tickets"
   },
   "header": {
     "profile": "Profile",
@@ -511,5 +512,23 @@
       "title": "Access denied",
       "description": "You do not have permission to view this page. If you believe this is a mistake, contact your administrator."
     }
+  },
+  "feedback": {
+    "openButton": "Send feedback",
+    "title": "Feedback",
+    "description": "Report a bug or suggestion. We automatically include page and browser info.",
+    "type": "Type",
+    "types": {
+      "Bug": "Bug",
+      "Suggestion": "Suggestion",
+      "Other": "Other"
+    },
+    "titleLabel": "Title",
+    "titlePlaceholder": "Short summary of the issue",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Describe what happened, steps to reproduce, or your idea...",
+    "send": "Send",
+    "sent": "Thanks! Your feedback was sent.",
+    "sendFailed": "Could not send feedback. Please try again."
   }
 }

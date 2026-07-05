@@ -36,7 +36,7 @@ const AUTH_SKIP_401 = [
 ];
 
 // Pages where we should NOT force-redirect on refresh failure
-const PUBLIC_PATHS = ["/login", "/register", "/create-organization"];
+const PUBLIC_PATHS = ["/login", "/register", "/create-organization", "/admin/login"];
 
 api.interceptors.response.use(
   (res) => res,
@@ -80,11 +80,11 @@ api.interceptors.response.use(
 
         // Only hard-redirect if we're on a protected page
         if (typeof window !== "undefined") {
-          const isPublicPage = PUBLIC_PATHS.some((p) =>
-            window.location.pathname.startsWith(p)
-          );
+          const pathname = window.location.pathname;
+          const isPublicPage = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
           if (!isPublicPage) {
-            window.location.href = "/login";
+            // Send admin-area pages back to the admin login, not the customer one.
+            window.location.href = pathname.startsWith("/admin") ? "/admin/login" : "/login";
           }
         }
 
