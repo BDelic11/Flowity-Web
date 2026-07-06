@@ -54,6 +54,7 @@ const ERROR_CODE_MESSAGES: Record<string, string> = {
   "Booking.ClientNameRequired": "Ime klijenta je obavezno.",
   "Customer.NotFound": "Klijent nije pronađen.",
   "Customer.AlreadyBlocked": "Klijent je već blokiran.",
+  "Customer.PhoneAlreadyInUse": "Klijent s ovim brojem telefona već postoji.",
   "Subscription.NotFound": "Pretplata nije pronađena.",
   "Subscription.PlanNotChosen": "Molimo odaberite plan pretplate.",
   "Subscription.BookingLimitReached": "Dostigli ste limit rezervacija za vaš plan.",

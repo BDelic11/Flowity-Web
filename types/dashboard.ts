@@ -6,6 +6,14 @@ export type NextAppointment = {
   staffName: string | null;
 };
 
+export type LastCompletedAppointment = {
+  clientName: string;
+  serviceName: string;
+  startAt: string;
+  endAt: string;
+  customerId: string | null;
+};
+
 export type SalonMetrics = {
   todaysAppointmentsCount: number;
   weeksAppointmentsCount: number;
@@ -13,4 +21,5 @@ export type SalonMetrics = {
   todaysRevenue: number;
   nextAppointment: NextAppointment | null;
   upcomingAppointments: NextAppointment[];
+  lastCompletedAppointment: LastCompletedAppointment | null;
 };

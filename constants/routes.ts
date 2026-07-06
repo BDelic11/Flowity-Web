@@ -39,6 +39,7 @@ const apiRoutes = {
 
   staff: "/staff",
   customers: "/customers",
+  customerNotes: (customerId: string) => `/customers/${customerId}/notes`,
   subscriptions: "/subscriptions",
 
   organizations: "/organizations",
