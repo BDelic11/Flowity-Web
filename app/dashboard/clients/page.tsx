@@ -2,9 +2,12 @@
 
 import { useGetCustomers, Customer } from "@/app/api/hooks/customers/useGetCustomers";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CustomerNotesModal } from "@/components/customers/CustomerNotesModal";
+import { AddCustomerModal } from "@/components/customers/AddCustomerModal";
 import { format } from "date-fns";
-import { CheckCircle, XCircle, Search, Users } from "lucide-react";
+import { CheckCircle, XCircle, Search, Users, StickyNote, UserPlus } from "lucide-react";
 import { useState, useMemo } from "react";
 
 function GdprBadge({ consentAt }: { consentAt: string | null }) {
@@ -27,6 +30,12 @@ function GdprBadge({ consentAt }: { consentAt: string | null }) {
 export default function ClientsPage() {
   const { data, isLoading } = useGetCustomers(1, 200);
   const [search, setSearch] = useState("");
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [notesModal, setNotesModal] = useState<{
+    open: boolean;
+    customerId: string;
+    customerName: string;
+  }>({ open: false, customerId: "", customerName: "" });
 
   const customers = useMemo<Customer[]>(() => {
     if (!data?.items) return [];
@@ -42,13 +51,23 @@ export default function ClientsPage() {
 
   const consentedCount = data?.items.filter((c) => c.gdprConsentAt).length ?? 0;
 
+  function openNotes(c: Customer) {
+    setNotesModal({ open: true, customerId: c.id, customerName: c.displayName });
+  }
+
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold">Klijenti (WhatsApp)</h1>
-        <p className="text-sm text-muted-foreground">
-          Kontakti koji su se javili putem WhatsApp kanala. Prikazuje GDPR status i povijest rezervacija.
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-semibold">Klijenti</h1>
+          <p className="text-sm text-muted-foreground">
+            Klijenti iz WhatsApp kanala i ručno dodani. Prikazuje GDPR status i povijest rezervacija.
+          </p>
+        </div>
+        <Button onClick={() => setAddModalOpen(true)} className="shrink-0">
+          <UserPlus className="h-4 w-4 mr-2" />
+          Dodaj klijenta
+        </Button>
       </div>
 
       {/* Stats row */}
@@ -103,6 +122,7 @@ export default function ClientsPage() {
                 <th className="text-left px-4 py-3 font-medium">GDPR</th>
                 <th className="text-right px-4 py-3 font-medium hidden md:table-cell">Rezervacije</th>
                 <th className="text-right px-4 py-3 font-medium hidden lg:table-cell">Registriran</th>
+                <th className="text-right px-4 py-3 font-medium">Bilješke</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -133,6 +153,17 @@ export default function ClientsPage() {
                   <td className="px-4 py-3 text-right text-muted-foreground hidden lg:table-cell">
                     {format(new Date(c.createdAt), "dd.MM.yyyy")}
                   </td>
+                  <td className="px-4 py-3 text-right">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-7 w-7 text-muted-foreground hover:text-primary"
+                      title="Bilješke"
+                      onClick={() => openNotes(c)}
+                    >
+                      <StickyNote className="h-3.5 w-3.5" />
+                    </Button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -144,6 +175,20 @@ export default function ClientsPage() {
         Sukladno GDPR-u (Uredba EU 2016/679), osobni podaci klijenata obrađuju se isključivo za upravljanje
         rezervacijama. Klijenti mogu zatražiti uvid, ispravak ili brisanje svojih podataka u svakom trenutku.
       </p>
+
+      {/* Add customer modal */}
+      <AddCustomerModal
+        open={addModalOpen}
+        onClose={() => setAddModalOpen(false)}
+      />
+
+      {/* Notes modal */}
+      <CustomerNotesModal
+        open={notesModal.open}
+        onClose={() => setNotesModal((s) => ({ ...s, open: false }))}
+        customerId={notesModal.customerId}
+        customerName={notesModal.customerName}
+      />
     </div>
   );
 }
